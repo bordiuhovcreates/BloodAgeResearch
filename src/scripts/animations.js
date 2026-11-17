@@ -647,3 +647,21 @@ function initBgVideo() {
 }
 
 initBgVideo();
+
+// data-defer-src / data-defer-srcset — фото, якого спочатку не видно (наступні кроки Блоку 2):
+// вантажиться після повного завантаження сторінки, щоб не забирати канал у першого екрана.
+function initDeferredImages() {
+  const imgs = [...document.querySelectorAll('img[data-defer-src]')];
+  if (!imgs.length) return;
+  const start = () => imgs.forEach((img) => {
+    if (img.dataset.deferSrcset) img.srcset = img.dataset.deferSrcset;
+    img.src = img.dataset.deferSrc;
+    img.removeAttribute('data-defer-src');
+    img.removeAttribute('data-defer-srcset');
+  });
+  const later = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300));
+  if (document.readyState === 'complete') later();
+  else window.addEventListener('load', later, { once: true });
+}
+
+initDeferredImages();

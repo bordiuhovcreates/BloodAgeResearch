@@ -41,12 +41,18 @@ const ticks = Array.from({ length: 120 }, (_, i) => {
             <line class="block2__tick block2__tick--red" x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} data-tick />
           ))}
         </svg>
-        {mission.steps.map((step, i) => (
+        {mission.steps.map((step, i) => {
+          const src = url(step.image);
+          const srcset = small(step.image) ? `${url(small(step.image))} 360w, ${url(step.image)} 660w` : undefined;
+          // Фото кроків 2–4 спочатку не видно — вантажимо їх після сторінки (data-defer-* в animations.js)
+          return (
           <img
             class:list={['block2__img', { 'is-active': i === 0 }]}
-            src={url(step.image)}
-            srcset={small(step.image) ? `${url(small(step.image))} 360w, ${url(step.image)} 660w` : undefined}
-            sizes="(max-width: 1023px) 55vw, 18vw"
+            src={i === 0 ? src : undefined}
+            srcset={i === 0 ? srcset : undefined}
+            data-defer-src={i === 0 ? undefined : src}
+            data-defer-srcset={i === 0 ? undefined : srcset}
+            sizes="(max-width: 1023px) 50vw, 18vw"
             alt=""
             width="660"
             height="660"
@@ -55,7 +61,8 @@ const ticks = Array.from({ length: 120 }, (_, i) => {
             style={`--s: ${step.imageSize || 300}; --dx: ${step.imageShift || 0}`}
             data-step={i}
           />
-        ))}
+          );
+        })}
       </div>
 
       {mission.steps.map((step, i) => (
