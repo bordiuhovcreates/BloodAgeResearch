@@ -4,7 +4,13 @@
 // (логіка — data-scroll-steps в animations.js). Розміри — px макета 1920 × --u.
 import home from '../content/home.json';
 import { url } from '../lib/url';
+import { existsSync } from 'node:fs';
 const { mission } = home;
+// Менша версія фото (x-360.webp поруч із x.webp) — для телефонів; якщо її немає, береться звичайне фото
+const small = (src: string) => {
+  const s = src.replace(/\.webp$/, '-360.webp');
+  return s !== src && existsSync(`public/${s.replace(/^\//, '')}`) ? s : '';
+};
 
 // 120 рисок через 3° від 12 години за годинниковою, радіус 283.3–300 (як у Figma).
 // Для кожної — сіра і червона поверх неї (червона проявляється при прокрутці).
@@ -39,6 +45,8 @@ const ticks = Array.from({ length: 120 }, (_, i) => {
           <img
             class:list={['block2__img', { 'is-active': i === 0 }]}
             src={url(step.image)}
+            srcset={small(step.image) ? `${url(small(step.image))} 360w, ${url(step.image)} 660w` : undefined}
+            sizes="(max-width: 1023px) 55vw, 18vw"
             alt=""
             width="660"
             height="660"

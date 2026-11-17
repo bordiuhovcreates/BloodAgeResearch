@@ -630,7 +630,20 @@ function initLiquid() {
 
 initLiquid();
 
-// data-bg-video — фонове відео; при reduced motion зупиняється на першому кадрі.
-if (reduce) {
-  document.querySelectorAll('[data-bg-video]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+// data-bg-video — фонове відео. Спочатку видно постер; саме відео ([data-src] у <source>) вантажиться
+// й запускається після повного завантаження сторінки, щоб не забирати канал у першого екрана.
+// При reduced motion лишається постер.
+function initBgVideo() {
+  const videos = [...document.querySelectorAll('[data-bg-video]')];
+  if (!videos.length || reduce) return;
+  const start = () => videos.forEach((v) => {
+    v.querySelectorAll('source[data-src]').forEach((s) => { s.src = s.dataset.src; s.removeAttribute('data-src'); });
+    v.load();
+    v.play().catch(() => {});
+  });
+  const later = () => (window.requestIdleCallback ? requestIdleCallback(start, { timeout: 1500 }) : setTimeout(start, 300));
+  if (document.readyState === 'complete') later();
+  else window.addEventListener('load', later, { once: true });
 }
+
+initBgVideo();

@@ -29,17 +29,17 @@ const { news } = hero;
         poster={url(hero.poster)}
         width="1680"
         height="720"
-        autoplay
         muted
         loop
         playsinline
-        preload="auto"
+        preload="none"
         aria-hidden="true"
         data-bg-video
       >
-        {/* AV1 — легший; браузери без AV1 беруть H.264 */}
-        {hero.videoAv1 && <source src={url(hero.videoAv1)} type='video/mp4; codecs="av01.0.08M.08"' />}
-        <source src={url(hero.video)} type="video/mp4" />
+        {/* Відео вантажиться після завантаження сторінки (animations.js), спочатку видно постер —
+            так перший екран з'являється швидше. AV1 — легший; браузери без AV1 беруть H.264 */}
+        {hero.videoAv1 && <source data-src={url(hero.videoAv1)} type='video/mp4; codecs="av01.0.08M.08"' />}
+        <source data-src={url(hero.video)} type="video/mp4" />
       </video>
     )}
     <p class="block1__scroll">{hero.scrollLabel} <span data-scroll-progress>0%</span></p>
