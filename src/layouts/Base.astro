@@ -37,7 +37,10 @@ const ogImage = settings.seo.ogImage ? new URL(url(settings.seo.ogImage), Astro.
     <!-- Шрифт з макета: Inter Tight (Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- Шрифт вантажиться, не блокуючи першу відмальовку (швидкість на мобільних) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" /></noscript>
     <slot name="head" />
   </head>
   <body>

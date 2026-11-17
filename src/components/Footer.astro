@@ -90,7 +90,8 @@ const tel = `tel:${contacts.phone.replace(/[^\d+]/g, '')}`;
   .footer__lead { position: absolute; left: var(--gutter); top: calc(42 * var(--u)); line-height: 1.01; }
   .footer__label { position: absolute; top: calc(42 * var(--u)); color: var(--color-text-muted); }
   .footer__links { position: absolute; top: calc(80 * var(--u)); white-space: nowrap; }
-  .footer__links li + li { margin-top: var(--gap-10); } /* рядки через 28, як у Figma */
+  /* Рядки через 28, як у Figma; на невеликих екранах — не менше 24 px між рядками (зона натискання, спецможливості) */
+  .footer__links li + li { margin-top: max(var(--gap-10), calc(24px - 1em)); }
   /* Посилання: при наведенні пункт стає акцентним червоним, а літери «розшифровуються» випадковими
      символами, як на кнопках сайту (data-decrypt в animations.js) */
   .footer__links a,
