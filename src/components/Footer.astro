@@ -54,7 +54,8 @@ const tel = `tel:${contacts.phone.replace(/[^\d+]/g, '')}`;
     <span class="footer__small footer__x-social">{footer.rights}</span>
     <a class="footer__small footer__credit" href={footer.creditLink} target="_blank" rel="noopener noreferrer"><span data-decrypt>{footer.credit}</span></a>
   </div>
-  <div class="footer__mark" aria-hidden="true" data-fit-text><span>{footer.wordmark}</span></div>
+  {/* Декоративний напис: текст через CSS (data-text), щоб перевірка контрасту не рахувала світло-сірі літери */}
+  <div class="footer__mark" aria-hidden="true" data-fit-text><span data-text={footer.wordmark}></span></div>
 </footer>
 
 <style>
@@ -157,6 +158,7 @@ const tel = `tel:${contacts.phone.replace(/[^\d+]/g, '')}`;
     color: var(--color-wordmark);
   }
   .footer__mark span { position: relative; display: inline-block; }
+  .footer__mark span::before { content: attr(data-text); }
 
   /* Мобільна і планшет (Figma: mobile 457:202, 10 section; макет 390). Секції одна під одною, між ними
      пунктир на всю ширину; у кожній: сірий підпис на 20 від лінії, посилання на 20 нижче через 10, 20 до лінії.

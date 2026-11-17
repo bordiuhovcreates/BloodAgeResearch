@@ -427,7 +427,7 @@ function initFitText() {
       const size = parseFloat(cs.fontSize);
       const avail = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       ctx.font = `${cs.fontWeight} ${size}px ${cs.fontFamily}`;
-      const m = ctx.measureText(span.textContent.trim());
+      const m = ctx.measureText((span.dataset.text || span.textContent).trim()); // data-text — текст через CSS
       const inkLeft = -m.actualBoundingBoxLeft; // де починається контур першої літери
       const inkWidth = m.actualBoundingBoxRight - inkLeft;
       if (inkWidth <= 0 || avail <= 0) return;

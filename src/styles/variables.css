@@ -29,7 +29,9 @@
   --color-bg: var(--color-white);
   --color-bg-gray: var(--color-white);
   --color-text: var(--color-black);
-  --color-text-muted: var(--color-silver-gray);
+  /* Сірий текст (підписи, неактивні пункти): темніший за Silver Gray ліній — контраст 4.7:1 на світлому фоні,
+     як вимагає перевірка спецможливостей (WCAG AA, мінімум 4.5:1). Лінії й рамки лишаються Silver Gray */
+  --color-text-muted: #707070;
   --color-placeholder: rgb(0 0 0 / 0.4); /* підказка в полях форми на мобільній (Figma: чорний 40%) */
   --color-border: var(--color-silver-gray);
 
