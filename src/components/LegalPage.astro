@@ -1,0 +1,85 @@
+---
+// Юридична сторінка (Privacy Policy, Terms of Use) — за стилем Syntrex, але з нашою типографікою й масштабом:
+// усе по лівому краю, червона назва згори (посилання на головну, як на першому екрані), великий заголовок 96,
+// сіра дата оновлення і один широкий блок тексту на три колонки сітки; лише чорний і сірий.
+// Текст — Markdown у src/content/legal/. Розміри — px макета 1920 × --u.
+import Base from '../layouts/Base.astro';
+import Footer from './Footer.astro';
+import Popup from './Popup.astro';
+import Menu from './Menu.astro';
+import legal from '../content/legal.json';
+import { url } from '../lib/url';
+import { getEntry, render } from 'astro:content';
+
+interface Props { id: string }
+const entry = await getEntry('legal', Astro.props.id);
+if (!entry) throw new Error(`Немає сторінки src/content/legal/${Astro.props.id}.md`);
+const { title, description, updated } = entry.data;
+const { Content } = await render(entry);
+const date = updated.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+---
+<Base title={`${title} — ${legal.home}`} description={description}>
+  <main class="legal">
+    <a class="legal__home" href={url('/')}><span data-decrypt>{legal.home}</span></a>
+    <h1 class="legal__title t-h1" data-anim="fade-up">{title}</h1>
+    <p class="legal__updated" data-anim="fade-up">{legal.updated} {date}</p>
+    <article class="legal__prose">
+      <Content />
+    </article>
+  </main>
+  <Footer />
+  <Popup />
+  <Menu />
+</Base>
+
+<style>
+  /* Назва — як на першому екрані (на 50 від верху, 40 від краю); заголовок на 160 від верху */
+  .legal { position: relative; padding: calc(160 * var(--u)) var(--gutter) 0; }
+  .legal__home {
+    position: absolute;
+    top: calc(50 * var(--u));
+    left: var(--gutter);
+    color: var(--color-accent);
+  }
+  .legal__updated { margin-top: calc(30 * var(--u)); color: var(--color-text-muted); }
+
+  /* Відступи як на Syntrex: дата → текст 100, між розділами 60, заголовок розділу → текст 20, між абзацами 20.
+     Один широкий блок тексту на три колонки сітки (3 × 445 + 2 × 20) */
+  .legal__prose {
+    max-width: calc(1375 * var(--u));
+    margin-top: calc(100 * var(--u));
+    line-height: var(--article-lh);
+  }
+  .legal__prose > :global(* + *) { margin-top: var(--gap-20); }
+  .legal__prose :global(h2) {
+    margin-top: calc(60 * var(--u));
+    font-size: var(--h3-size);
+    line-height: var(--h3-lh);
+    font-weight: var(--weight-medium);
+  }
+  .legal__prose :global(h2 + *) { margin-top: var(--gap-20); }
+  .legal__prose :global(strong) { font-weight: var(--weight-bold); }
+  .legal__prose :global(a) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color 0.3s var(--ease-soft);
+  }
+  .legal__prose :global(a:hover) { color: var(--color-accent); }
+  .legal__prose :global(ul) { list-style: none; padding: 0; }
+  .legal__prose :global(li) { position: relative; padding-left: calc(30 * var(--u)); }
+  .legal__prose :global(li + li) { margin-top: var(--gap-10); }
+  .legal__prose :global(li::before) { content: '—'; position: absolute; left: 0; }
+
+  /* Мобільна і планшет — за мобільним макетом головної: назва сайту на 31 (по центру кнопки меню 35),
+     заголовок 40 на 95; дата на 20 нижче; текст на всю ширину між полями 20, на 40 нижче дати,
+     розділи через 40, абзаци через 20 */
+  @media (max-width: 1023px) {
+    .legal { padding-top: calc(95 * var(--u)); }
+    .legal__home { top: calc(31 * var(--u)); }
+    .legal__title { overflow-wrap: break-word; }
+    .legal__updated { margin-top: var(--gap-20); }
+    .legal__prose { max-width: none; margin-top: var(--gap-40); overflow-wrap: break-word; }
+    .legal__prose :global(h2) { margin-top: var(--gap-40); }
+    .legal__prose :global(li) { padding-left: var(--gap-20); }
+  }
+</style>

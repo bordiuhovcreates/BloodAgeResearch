@@ -1,0 +1,148 @@
+---
+// Блок 7 — партнерство (Figma: 383:155). Червоний екран 100svh: заголовок і кнопка згори,
+// чотири пункти притиснуті донизу, фото — на всю праву половину. Кнопка — як на сайті (btn-split),
+// білий варіант. Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { partner } = home;
+
+const srcset = /partner-\d+\.webp$/.test(partner.image)
+  ? [640, 960, 1254].map((w) => `${url(partner.image.replace(/\d+\.webp$/, `${w}.webp`))} ${w}w`).join(', ')
+  : undefined;
+---
+<section class="block7" id="block-7">
+  <p class="block7__label">{partner.label}</p>
+  <h2 class="block7__title t-h2">{partner.title}</h2>
+
+  <button class="block7__btn btn-split btn-split--light" type="button" data-popup-open="Партнерство" data-popup-target="partner">
+    <span class="btn-split__bridge" aria-hidden="true"></span>
+    <span class="btn-split__main"><span data-decrypt>{partner.button}</span></span>
+    <span class="btn-split__arrow" aria-hidden="true">
+      <img class="btn-split__icon" src={url('icons/arrow-right-dark.svg')} alt="" width="25" height="25" />
+    </span>
+  </button>
+
+  <div class="block7__points">
+    {partner.points.map((p) => (
+      <div class="block7__point">
+        <h3 class="block7__point-title">{p.title}</h3>
+        <p class="block7__point-text">{p.text}</p>
+      </div>
+    ))}
+  </div>
+
+  {partner.image && (
+    <img
+      class="block7__img"
+      src={url(partner.image)}
+      srcset={srcset}
+      sizes="(max-width: 1023px) 90vw, 50vw"
+      alt=""
+      width="960"
+      height="1080"
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+</section>
+
+<style>
+  /* Рівно один екран; 250 від Блоку 6 */
+  .block7 {
+    position: relative;
+    margin-top: var(--section-gap);
+    height: 100svh;
+    overflow: hidden;
+    background: var(--color-accent);
+    color: var(--color-white);
+  }
+  .block7__label { position: absolute; left: var(--gutter); top: var(--gap-40); }
+  .block7__title {
+    position: absolute;
+    left: var(--gutter);
+    top: calc(88 * var(--u));
+    white-space: pre; /* переноси з тексту, як у Figma */
+  }
+
+  /* Біла кнопка 880×70: та сама анімація, що й інші кнопки сайту */
+  .block7__btn {
+    --control-height: calc(70 * var(--u));
+    position: absolute;
+    left: var(--gutter);
+    top: calc(548 * var(--u));
+    width: calc(50% - 80 * var(--u));
+  }
+
+  /* 2 × 2 пункти внизу: колонки 288 з проміжком 177, ряди через 40, останній — 40 над низом */
+  .block7__points {
+    position: absolute;
+    left: var(--gutter);
+    bottom: var(--gap-40);
+    display: grid;
+    grid-template-columns: calc(288 * var(--u)) calc(288 * var(--u));
+    column-gap: calc(177 * var(--u));
+    row-gap: var(--gap-40);
+  }
+  .block7__point-title { font-size: var(--h3-size); line-height: var(--h3-lh); }
+  .block7__point-text { margin-top: var(--gap-20); }
+
+  /* Фото — права половина на всю висоту */
+  .block7__img {
+    position: absolute;
+    left: 50%;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  /* Мобільна і планшет (Figma: mobile 407:3247, 7 section; макет 390). Червоний блок за вмістом:
+     підпис на 20; фото 350 × 202 зі скругленням 5 на 32 нижче (кадр — голови й руки людей, верхня частина фото);
+     заголовок 36 (ширина 354) на 31 нижче фото; біла кнопка 350 × 60 на 20 нижче; пункти в колонку на 50 нижче
+     кнопки: назва 20, опис на 10 нижче, між пунктами 20; знизу поле 20 */
+  @media (max-width: 1023px) {
+    .block7 {
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      padding: var(--gap-20) var(--gutter);
+    }
+    .block7__label,
+    .block7__title,
+    .block7__points,
+    .block7__img { position: static; }
+    .block7__btn { position: relative; left: auto; top: auto; } /* relative — частини кнопки всередині неї */
+    .block7__img {
+      order: 1;
+      width: 100%;
+      height: calc(202 * var(--u));
+      margin-top: calc(32 * var(--u));
+      border-radius: var(--radius-s);
+      object-position: 50% 5%;
+    }
+    .block7__title {
+      order: 2;
+      width: calc(354 * var(--u));
+      margin-top: calc(31 * var(--u));
+      white-space: normal;
+      text-wrap: wrap; /* рядки як у Figma: «Partner With Us to / Advance the Science / of Aging Through …» */
+    }
+    .block7__btn {
+      order: 3;
+      --control-height: calc(60 * var(--u));
+      width: 100%;
+      flex: none;
+      margin-top: var(--gap-20);
+    }
+    .block7__btn .btn-split__icon { width: var(--gap-20); height: var(--gap-20); }
+    .block7__points {
+      order: 4;
+      grid-template-columns: 1fr;
+      row-gap: var(--gap-20);
+      margin-top: calc(50 * var(--u));
+    }
+    .block7__point-text { margin-top: var(--gap-10); max-width: calc(298 * var(--u)); }
+  }
+</style>

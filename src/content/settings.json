@@ -1,0 +1,144 @@
+{
+  "seo": {
+    "title": "Назва сайту — короткий опис",
+    "description": "Опис сайту для пошуку і соцмереж, 140–160 символів.",
+    "ogImage": "/images/og-image.jpg"
+  },
+  "header": {
+    "logo": "LOGO",
+    "button": "Залишити заявку",
+    "nav": [
+      {
+        "label": "Переваги",
+        "href": "#block-3"
+      },
+      {
+        "label": "Питання",
+        "href": "#block-4"
+      },
+      {
+        "label": "Контакти",
+        "href": "#block-5"
+      }
+    ]
+  },
+  "contacts": {
+    "phone": "+38 (067) 245 18 64",
+    "email": "hello@bloodage.com",
+    "address": "Kyiv, Ukraine"
+  },
+  "footer": {
+    "lead": "Stay connected with our research",
+    "newsletter": {
+      "placeholder": "E-mail address",
+      "button": "Subscribe",
+      "sending": "Sending…",
+      "success": "Thank you for subscribing!",
+      "error": "Something went wrong. Please try again."
+    },
+    "sitemapLabel": "Sitemap",
+    "sitemap": [
+      {
+        "label": "Mission & Vision",
+        "href": "#block-2"
+      },
+      {
+        "label": "How Research Works",
+        "href": "#block-3"
+      },
+      {
+        "label": "Research Areas",
+        "href": "#block-5"
+      },
+      {
+        "label": "Team",
+        "href": "#block-6"
+      },
+      {
+        "label": "Partnerships",
+        "href": "#block-7"
+      },
+      {
+        "label": "Publications",
+        "href": "#block-9"
+      }
+    ],
+    "socialLabel": "Social",
+    "social": [
+      {
+        "label": "Instagram",
+        "href": "#"
+      },
+      {
+        "label": "LinkedIn",
+        "href": "#"
+      },
+      {
+        "label": "Facebook",
+        "href": "#"
+      }
+    ],
+    "contactLabel": "Contact",
+    "copyright": "© 2026 BloodAge Research",
+    "terms": "Terms of Use",
+    "termsLink": "/terms-of-use/",
+    "privacy": "Privacy Policy",
+    "privacyLink": "/privacy-policy/",
+    "rights": "All rights reserved",
+    "credit": "Website by Vladlen Bordiuhov",
+    "creditLink": "https://www.instagram.com/bordiuhovcreates/",
+    "wordmark": "BloodAge Research"
+  },
+  "menu": {
+    "links": [
+      {
+        "label": "Mission",
+        "href": "#block-2"
+      },
+      {
+        "label": "Process",
+        "href": "#block-3"
+      },
+      {
+        "label": "Areas",
+        "href": "#block-5"
+      },
+      {
+        "label": "Team",
+        "href": "#block-6"
+      },
+      {
+        "label": "Partners",
+        "href": "#block-7"
+      },
+      {
+        "label": "Publications",
+        "href": "#block-9"
+      }
+    ],
+    "button": "Request Access",
+    "label": "Menu",
+    "closeLabel": "Close"
+  },
+  "forms": {
+    "nameLabel": "Name *",
+    "namePlaceholder": "Dr. Elena Kovalenko",
+    "emailLabel": "E-mail *",
+    "emailPlaceholder": "name@institution.org",
+    "phoneLabel": "Phone number *",
+    "phonePlaceholder": "+38 (098) 999-99-99",
+    "error": "Something went wrong. Please try again.",
+    "success": "Thank you! Your submission has been received!",
+    "closeLabel": "Close",
+    "patient": {
+      "title": "Request\nResearch\nAccess",
+      "button": "Send Request",
+      "service": "Request Research Access"
+    },
+    "partner": {
+      "title": "Discuss\nResearch\nPartnership",
+      "button": "Send Proposal",
+      "service": "Discuss Research Partnership"
+    }
+  }
+}

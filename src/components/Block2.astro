@@ -1,0 +1,176 @@
+---
+// Блок 2 — місія (Figma: 383:179). Секція висотою 4 екрани: вміст «прилипає»,
+// а під час прокрутки шкала заповнюється 0 → 100% і кроки 01–04 змінюють один одного
+// (логіка — data-scroll-steps в animations.js). Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { mission } = home;
+
+// 120 рисок через 3° від 12 години за годинниковою, радіус 283.3–300 (як у Figma).
+// Для кожної — сіра і червона поверх неї (червона проявляється при прокрутці).
+const ticks = Array.from({ length: 120 }, (_, i) => {
+  const a = ((-90 + i * 3) * Math.PI) / 180;
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  return {
+    x1: +(300 + c * 283.3).toFixed(2),
+    y1: +(300 + s * 283.3).toFixed(2),
+    x2: +(300 + c * 300).toFixed(2),
+    y2: +(300 + s * 300).toFixed(2),
+  };
+});
+---
+<section class="block2" id="block-2" data-scroll-steps>
+  <div class="block2__sticky">
+    <div class="block2__inner" data-scroll-fit>
+      <p class="block2__label">{mission.label}</p>
+      <h2 class="block2__title t-h2">
+        {mission.title}<br class="block2__br" /> <span class="block2__accent">{mission.titleAccent}</span>
+      </h2>
+
+      <div class="block2__ring">
+        <svg class="block2__ticks" viewBox="0 0 600 600" aria-hidden="true">
+          {ticks.map((t) => <line class="block2__tick" x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} />)}
+          {ticks.map((t) => (
+            <line class="block2__tick block2__tick--red" x1={t.x1} y1={t.y1} x2={t.x2} y2={t.y2} data-tick />
+          ))}
+        </svg>
+        {mission.steps.map((step, i) => (
+          <img
+            class:list={['block2__img', { 'is-active': i === 0 }]}
+            src={url(step.image)}
+            alt=""
+            width="660"
+            height="660"
+            loading="lazy"
+            decoding="async"
+            style={`--s: ${step.imageSize || 300}; --dx: ${step.imageShift || 0}`}
+            data-step={i}
+          />
+        ))}
+      </div>
+
+      {mission.steps.map((step, i) => (
+        <div class:list={['block2__step', { 'is-active': i === 0 }]} data-step={i}>
+          <span class="block2__num">{step.label}</span>
+          <h3 class="block2__name">{step.title}</h3>
+          <p class="block2__text">{step.text}</p>
+        </div>
+      ))}
+
+      <span class="block2__hint">{mission.scrollLabel}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Секція вища за екран: вміст стоїть на місці, поки прокручуються 3 додаткові екрани */
+  .block2 { position: relative; height: 400svh; }
+  .block2__sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+  /* Блок на всю ширину між полями, висота 921 по центру екрана; якщо екран нижчий — зменшується (--k з animations.js) */
+  .block2__inner {
+    position: relative;
+    flex: none;
+    margin-left: var(--gutter);
+    width: var(--container);
+    height: calc(921 * var(--u));
+    text-align: center;
+    transform: scale(var(--k, 1));
+  }
+  .block2__label { position: absolute; inset: 0 0 auto; }
+  .block2__title { position: absolute; inset: calc(48 * var(--u)) 0 auto; }
+  .block2__accent { color: var(--color-accent); }
+
+  /* Коло 600×600 */
+  .block2__ring {
+    position: absolute;
+    left: calc(50% - 300 * var(--u)); /* коло по центру */
+    top: calc(321 * var(--u));
+    width: calc(600 * var(--u));
+    height: calc(600 * var(--u));
+  }
+  .block2__ticks { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .block2__tick { stroke: var(--color-silver-gray); stroke-width: 1; }
+  .block2__tick--red { stroke: var(--color-accent); opacity: 0; }
+
+  .block2__img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--s) * var(--u));
+    height: calc(var(--s) * var(--u));
+    max-width: none;
+    transform: translate(calc(-50% + var(--dx) * var(--u)), -50%);
+  }
+
+  /* Кроки лежать один на одному, видно активний */
+  .block2__step { position: absolute; inset: 0; pointer-events: none; }
+  .block2__img,
+  .block2__step { opacity: 0; transition: opacity 0.8s var(--ease-soft); }
+  .block2__img.is-active,
+  .block2__step.is-active { opacity: 1; }
+
+  .block2__num { position: absolute; left: 0; top: calc(612 * var(--u)); color: var(--color-accent); }
+  .block2__name {
+    position: absolute;
+    inset: calc(421 * var(--u)) 0 auto;
+    font-size: var(--h3-size);
+    line-height: var(--h3-lh);
+    color: var(--color-accent);
+  }
+  .block2__text {
+    position: absolute;
+    left: calc(50% - 149.5 * var(--u)); /* опис по центру кола */
+    top: calc(786 * var(--u));
+    width: calc(299 * var(--u));
+    color: var(--color-text-muted);
+    text-wrap: balance;
+  }
+  .block2__hint {
+    position: absolute;
+    right: 0;
+    top: calc(612 * var(--u));
+    color: var(--color-text);
+    opacity: 0.2;
+  }
+
+  /* Мобільна і планшет (Figma: mobile 396:2017, 2 section; макет 390). Блок 350 × 586 по центру екрана:
+     підпис, заголовок 36 на 34 нижче, «01 / Blood Sample» по центру на 192, коло 350 на 236;
+     усередині кола назва кроку на 50 від верху кола, фото трохи вище центру, опис 189.6 на 257.
+     Підказка «Scroll» на мобільній не показується */
+  @media (max-width: 1023px) {
+    .block2__inner { height: calc(586 * var(--u)); }
+    /* Заголовок у 3 рядки, як у Figma: «We decode signals in / blood to understand / biological aging» —
+       червона частина продовжує рядок, без примусового переносу */
+    .block2__title { top: calc(34 * var(--u)); }
+    .block2__br { display: none; }
+    .block2__ring {
+      left: calc(50% - 175 * var(--u));
+      top: calc(236 * var(--u));
+      width: calc(350 * var(--u));
+      height: calc(350 * var(--u));
+    }
+    /* Фото: у Figma 189.6 при колі 350 (на десктопі 300 при колі 600) — множник 0.632 */
+    .block2__img {
+      top: calc(50% - 11.2 * var(--u));
+      width: calc(var(--s) * 0.632 * var(--u));
+      height: calc(var(--s) * 0.632 * var(--u));
+      transform: translate(calc(-50% + var(--dx) * 0.583 * var(--u)), -50%);
+    }
+    .block2__num { left: 0; right: 0; top: calc(192 * var(--u)); }
+    .block2__name { top: calc(286.33 * var(--u)); }
+    .block2__text {
+      left: calc(50% - 94.8 * var(--u));
+      top: calc(493 * var(--u));
+      width: calc(189.6 * var(--u));
+    }
+    .block2__hint { display: none; }
+  }
+</style>

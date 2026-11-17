@@ -1,0 +1,105 @@
+---
+// Панель праворуч на пів екрана (Figma: pc menu, pc form patient / partner) — спільна для меню і форм.
+// Поява: панель виїжджає справа наліво (0.7 с, м'яке гальмування), вміст їде трохи повільніше за панель
+// (паралакс) і доїжджає останнім. Закриття: вміст гасне, панель їде праворуч.
+// toggle — для меню: власного хрестика немає, закриває закріплена кнопка меню (Menu.astro), яка сама
+// перетворюється з бургера на хрестик. У форм — звичайний хрестик, що їде з панеллю.
+// Відкриття/закриття — interactive.js (data-panel, data-panel-open, data-panel-close).
+// Розміри — px макета 1920 × --u.
+import { url } from '../lib/url';
+
+interface Props {
+  name: string; // menu | patient | partner
+  label: string; // назва для незрячих
+  closeLabel: string;
+  toggle?: boolean;
+}
+const { name, label, closeLabel, toggle = false } = Astro.props;
+---
+<div class="panel" data-panel={name} role="dialog" aria-modal="true" aria-label={label} aria-hidden="true" inert>
+  <div class="panel__overlay" data-panel-close></div>
+  <div class="panel__box">
+    <div class="panel__group">
+      <slot />
+    </div>
+    {!toggle && (
+      <button class="panel__close" type="button" data-panel-close aria-label={closeLabel}>
+        <img src={url('icons/close.svg')} alt="" width="32" height="32" />
+      </button>
+    )}
+  </div>
+</div>
+
+<style>
+  .panel { position: fixed; inset: 0; z-index: 900; pointer-events: none; }
+  .panel.is-open { pointer-events: auto; }
+
+  /* Затемнення 20% + розмиття сайту: з'являються разом із виїздом, зникають наприкінці закриття */
+  .panel__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--color-overlay);
+    -webkit-backdrop-filter: blur(var(--overlay-blur));
+    backdrop-filter: blur(var(--overlay-blur));
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-soft) calc(var(--duration-panel) - 0.3s);
+  }
+  .panel.is-open .panel__overlay { opacity: 1; transition: opacity 0.4s var(--ease-soft) 0s; }
+
+  /* Права половина на всю висоту: виїжджає справа наліво */
+  .panel__box {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 50%;
+    translate: 100% 0;
+  }
+  .panel__box {
+    background: var(--color-panel);
+    transition: translate var(--duration-panel) var(--ease-menu);
+  }
+  .panel.is-open .panel__box { translate: 0 0; }
+
+  /* Вміст: паралакс — їде трохи повільніше і з більшої відстані, доїжджає останнім */
+  .panel__group {
+    position: absolute;
+    inset: 0;
+    padding: var(--gutter);
+    translate: calc(160 * var(--u)) 0;
+    opacity: 0;
+    transition: translate 0.4s var(--ease-menu), opacity 0.25s var(--ease-soft);
+  }
+  .panel.is-open .panel__group {
+    translate: 0 0;
+    opacity: 1;
+    transition:
+      translate calc(var(--duration-panel) + 0.25s) var(--ease-menu),
+      opacity 0.5s var(--ease-soft) 0.1s;
+  }
+
+  /* Червоний квадрат 60 — на 40 від верху і правого краю (там, де кнопка меню на першому екрані) */
+  .panel__close {
+    position: absolute;
+    z-index: 2;
+    top: var(--gutter);
+    right: var(--gutter);
+    display: grid;
+    place-items: center;
+    width: var(--control-height);
+    height: var(--control-height);
+    border-radius: var(--radius-s);
+    background: var(--color-accent);
+  }
+  .panel__close img { width: calc(32 * var(--u)); height: calc(32 * var(--u)); }
+  .panel__close:focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; }
+
+  /* Мобільна і планшет (Figma: mobile menu 417:434, mobile form 411:26): панель на весь екран,
+     поля 20; хрестик — квадрат 35 з іконкою 18 на 20 від верху і правого краю (там, де кнопка меню) */
+  @media (max-width: 1023px) {
+    .panel__box { width: 100%; }
+    .panel__close { width: calc(35 * var(--u)); height: calc(35 * var(--u)); }
+    .panel__close img { width: calc(18 * var(--u)); height: calc(18 * var(--u)); }
+  }
+
+</style>

@@ -1,0 +1,156 @@
+---
+// Блок 4 — науковий вплив (Figma: 383:340). Екран 100svh:
+//   фон тече за мишкою (WebGL, data-liquid), заголовок проявляється по літерах (data-scroll-reveal),
+//   цифри рахуються від 0 (data-count-group). Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { impact } = home;
+
+// srcset для фону, якщо він з набору impact-bg-*.webp
+const sizes = [960, 1440, 1920, 2400];
+const srcset = /impact-bg-\d+\.webp$/.test(impact.image)
+  ? sizes.map((w) => `${url(impact.image.replace(/\d+\.webp$/, `${w}.webp`))} ${w}w`).join(', ')
+  : undefined;
+---
+<section class="block4" id="block-4" data-liquid>
+  {impact.image && (
+    <img
+      class="block4__bg"
+      src={url(impact.image)}
+      srcset={srcset}
+      sizes="115vw"
+      alt=""
+      width="1920"
+      height="1080"
+      loading="lazy"
+      decoding="async"
+      crossorigin="anonymous"
+      data-liquid-img
+    />
+  )}
+  <canvas class="block4__canvas" aria-hidden="true" data-liquid-canvas></canvas>
+
+  <p class="block4__label">{impact.label}</p>
+  <h2 class="block4__title t-h2" data-scroll-reveal>{impact.title}</h2>
+
+  <div class="block4__stats" data-count-group>
+    {impact.stats.map((s) => (
+      <div class="block4__stat">
+        <span class="block4__num t-h2" data-to={s.value} data-suffix={s.suffix}>
+          {new Intl.NumberFormat('en-US').format(s.value)}{s.suffix}
+        </span>
+        <span class="block4__stat-label">{s.label}</span>
+        <span class="block4__dot" aria-hidden="true"></span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Відступ від Блоку 3: 210 + поле 40 під останньою карткою = 250, як у макеті */
+  .block4 {
+    position: relative;
+    margin-top: calc(210 * var(--u));
+    height: max(100svh, calc(900 * var(--u))); /* 100svh; на дуже низькому екрані — не нижче 900 макета, щоб заголовок не наїхав на цифри */
+    overflow: hidden;
+    background: var(--color-blood-dark);
+    color: var(--color-white);
+  }
+  .block4__bg,
+  .block4__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .block4__bg { object-fit: cover; }
+  .block4__canvas { opacity: 0; transition: opacity 0.6s var(--ease-soft); }
+  .block4__canvas.is-ready { opacity: 1; }
+
+  .block4__label { position: absolute; left: var(--gutter); top: var(--gap-40); }
+  .block4__title {
+    position: absolute;
+    left: var(--gutter);
+    top: calc(90 * var(--u));
+    width: calc(1325 * var(--u));
+  }
+
+  /* Смуга 350 знизу: лінії зверху і на 252, колонки 485 / 465 / 465 / 505 (як у Figma) */
+  .block4__stats {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(350 * var(--u));
+    display: grid;
+    grid-template-columns: 485fr 465fr 465fr 505fr;
+  }
+  .block4__stats::before,
+  .block4__stats::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px var(--line-style) var(--color-white);
+  }
+  .block4__stats::before { top: 0; }
+  .block4__stats::after { top: calc(252 * var(--u)); }
+
+  .block4__stat { position: relative; }
+  .block4__stat + .block4__stat::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-left: 1px var(--line-style) var(--color-white);
+  }
+  .block4__num { position: absolute; left: var(--gap-40); top: var(--gap-40); white-space: nowrap; }
+  .block4__stat-label {
+    position: absolute;
+    left: var(--gap-40);
+    top: calc(292 * var(--u));
+    line-height: 1.01;
+    white-space: nowrap;
+  }
+  .block4__dot {
+    position: absolute;
+    right: var(--gap-40);
+    top: calc(296 * var(--u));
+    width: var(--gap-10);
+    height: var(--gap-10);
+    border-radius: 50%;
+    background: var(--color-white);
+    transition: transform 0.4s var(--ease-out);
+  }
+  /* Область наведення більша за точку 10×10 */
+  .block4__dot::before { content: ''; position: absolute; inset: calc(-1 * var(--gap-10)); }
+  .block4__dot:hover { transform: scale(1.5); }
+  .block4__stat:last-child .block4__dot { right: calc(80 * var(--u)); }
+
+  /* Мобільна і планшет (Figma: mobile 402:2938, 4 section; макет 390). Блок 964 на 100 нижче останньої картки
+     Блоку 3: підпис на 20, заголовок 36 (ширина 354) на 54; від 500 — чотири рядки цифр по 116 з пунктиром
+     зверху на всю ширину: цифра 36 зліва на 40 від лінії, підпис праворуч (до 345) і точка 5 на 20 від краю */
+  @media (max-width: 1023px) {
+    .block4 { margin-top: calc(80 * var(--u)); height: calc(964 * var(--u)); }
+    .block4__label { top: var(--gap-20); }
+    .block4__title { top: calc(54 * var(--u)); width: calc(354 * var(--u)); }
+    .block4__stats {
+      top: calc(500 * var(--u));
+      height: auto;
+      grid-template-columns: 1fr;
+      grid-auto-rows: calc(116 * var(--u));
+    }
+    .block4__stats::after { display: none; }
+    .block4__stat + .block4__stat::before {
+      right: 0;
+      bottom: auto;
+      border-left: 0;
+      border-top: 1px var(--line-style) var(--color-white);
+    }
+    .block4__num { left: var(--gutter); top: var(--gap-40); }
+    .block4__stat-label { left: auto; right: calc(45 * var(--u)); top: calc(51 * var(--u)); line-height: 1; }
+    .block4__dot,
+    .block4__stat:last-child .block4__dot {
+      right: var(--gutter);
+      top: calc(56 * var(--u));
+      width: calc(5 * var(--u));
+      height: calc(5 * var(--u));
+    }
+  }
+</style>

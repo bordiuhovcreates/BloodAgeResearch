@@ -1,0 +1,35 @@
+---
+// Форми заявок у панелі праворуч (Figma: pc form patient / pc form partner).
+// «Пацієнт» відкривається будь-якою кнопкою з data-popup-open (Request Access тощо),
+// «Партнер» — кнопкою з data-popup-open і data-popup-target="partner" (Discuss a Partnership).
+// Назва з data-popup-open додається до назви форми в заявці (interactive.js).
+import Panel from './Panel.astro';
+import LeadForm from './LeadForm.astro';
+import settings from '../content/settings.json';
+const { forms } = settings;
+const variants = [
+  { name: 'patient', ...forms.patient },
+  { name: 'partner', ...forms.partner },
+];
+---
+{variants.map((v) => (
+  <Panel name={v.name} label={v.service} closeLabel={forms.closeLabel}>
+    <div class="form-panel">
+      <h2 class="form-panel__title t-h1">{v.title}</h2>
+      <div class="form-panel__form" data-service-default={v.service}>
+        <LeadForm variant="panel" texts={forms} service={v.service} button={v.button} />
+      </div>
+    </div>
+  </Panel>
+))}
+
+<style>
+  /* Заголовок 96 (H1, як пункти меню) згори, переноси з тексту; форма притиснута донизу */
+  .form-panel { position: relative; height: 100%; }
+  .form-panel__title { white-space: pre; }
+  .form-panel__form { position: absolute; left: 0; right: 0; bottom: 0; }
+  /* Мобільна: колонка, щоб подяка стала над кнопкою (LeadForm.astro) */
+  @media (max-width: 1023px) {
+    .form-panel__form { display: flex; flex-direction: column; }
+  }
+</style>

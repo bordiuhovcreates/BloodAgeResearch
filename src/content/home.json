@@ -1,0 +1,374 @@
+{
+  "hero": {
+    "brand": "BloodAge Research",
+    "location": "Kyiv, Ukraine",
+    "title": "How Your Body\nAges Through Biological Signals In Your Blood",
+    "subtitle": "By analyzing biomarkers, we study aging at the\ncellular level, determine biological age, assess\nhealth status, and identify potential age-related\nrisks before symptoms appear — helping people\nbetter understand and influence their longevity.",
+    "button": "Request Access",
+    "videoAv1": "/images/hero-loop-av1.mp4",
+    "video": "/images/hero-loop.mp4",
+    "poster": "/images/hero-poster.webp",
+    "scrollLabel": "SCROLL",
+    "news": {
+      "label": "Latest Publication",
+      "title": "The Pace of Aging",
+      "subtitle": "Blood Biomarkers",
+      "image": "/images/hero-news-pub-1.webp",
+      "link": "publications/blood-biomarkers-pace-of-aging/"
+    }
+  },
+  "mission": {
+    "label": "Mission & Vision",
+    "title": "We decode signals in blood",
+    "titleAccent": "to understand biological aging",
+    "scrollLabel": "SCROLL TO EXPLORE",
+    "steps": [
+      {
+        "label": "01 / BLOOD SAMPLE",
+        "title": "Blood Sample",
+        "text": "A blood sample is the starting point for reading the body’s biological signals.",
+        "image": "/images/mission-step-1.webp",
+        "imageSize": 328,
+        "imageShift": 0
+      },
+      {
+        "label": "02 / SIGNAL DECODING",
+        "title": "Signal Decoding",
+        "text": "Advanced bio-analysis unravels millions of molecular markers hidden inside plasma.",
+        "image": "/images/mission-step-2.webp",
+        "imageSize": 318,
+        "imageShift": 0
+      },
+      {
+        "label": "03 / BIOLOGICAL AGE",
+        "title": "Biological Age",
+        "text": "Revealing the true speed of cellular aging compared to your chronological age.",
+        "image": "/images/mission-step-3.webp",
+        "imageSize": 324,
+        "imageShift": 0
+      },
+      {
+        "label": "04 / LONGEVITY TARGET",
+        "title": "Longevity Target",
+        "text": "Transforming deep blood insights into actionable strategies to extend healthy human lifespan.",
+        "image": "/images/mission-step-4.webp",
+        "imageSize": 299,
+        "imageShift": 0.5
+      }
+    ]
+  },
+  "process": {
+    "label": "How Research Works",
+    "title": "Research Process",
+    "button": "Request Access",
+    "steps": [
+      {
+        "tag": "Blood Collection",
+        "title": "Blood samples form\nstructured data for\nresearch",
+        "text": "We collect blood samples under standardized conditions and measure a wide range of biomarkers, so every sample reflects the body’s current state and starts from a reliable point.",
+        "textWidth": 297,
+        "text2": "Each sample holds many biological signals, from blood cells to proteins and hormones, and together they form the raw material for every later stage of analysis and research.",
+        "image": "/images/process-1.webp"
+      },
+      {
+        "tag": "Marker Analysis",
+        "title": "Each blood marker\nbecomes a signal\nlinked to aging",
+        "text": "We measure biomarkers linked to metabolism, immunity, and inflammation, turning one blood sample into many data points that can be read on their own or compared across time.",
+        "textWidth": 330,
+        "text2": "Every value is recorded in a consistent format and checked against reference ranges, so each signal stays accurate, comparable, and ready for the next step of the process.",
+        "image": "/images/process-2.webp"
+      },
+      {
+        "tag": "Pattern Discovery",
+        "title": "Comparing aging\nprofiles reveals\nshared patterns",
+        "text": "We compare markers across many profiles and datasets to see which signals move together, which stay stable, and which repeat over time in people of similar age and background.",
+        "textWidth": 301,
+        "text2": "Recurring relationships between markers show that biological change follows a direction, turning separate numbers into patterns that describe how the body ages over time.",
+        "image": "/images/process-3.webp"
+      },
+      {
+        "tag": "Insight Review",
+        "title": "Key findings reveal\nclear insights into\nbiological age",
+        "text": "We review the strongest patterns and translate them into plain findings, so complex research results become clear, structured insights about biological age and longevity.",
+        "textWidth": 300,
+        "text2": "What began as a single blood sample ends as a clear picture of biological change, giving researchers a solid base for the next questions, studies, and better decisions.",
+        "image": "/images/process-4.webp"
+      }
+    ]
+  },
+  "impact": {
+    "label": "Scientific Impact",
+    "title": "Our research is grounded in biological data, shaped by a deeper understanding of human aging, revealing patterns in how the body changes over time, and guiding new insights toward healthier longevity.",
+    "image": "/images/impact-bg-1920.webp",
+    "stats": [
+      {
+        "value": 10,
+        "suffix": "+",
+        "label": "Years of Research"
+      },
+      {
+        "value": 50000,
+        "suffix": "+",
+        "label": "Samples Analyzed"
+      },
+      {
+        "value": 12,
+        "suffix": "",
+        "label": "Research Directions"
+      },
+      {
+        "value": 1,
+        "suffix": "",
+        "label": "Shared Goal — Healthier Longevity"
+      }
+    ]
+  },
+  "areas": {
+    "label": "Research Areas",
+    "title": "What We Study",
+    "lead": "We investigate six interconnected biological areas to understand how aging develops across the body and influences long-term health.",
+    "tag": "Aging Research",
+    "items": [
+      {
+        "title": "Biological Age Patterns",
+        "text": "We combine multiple blood signals to identify\nrecurring relationships that reveal how biological aging\ndiffers between individuals and changes over time.",
+        "image": "/images/area-1-1320.webp"
+      },
+      {
+        "title": "Metabolic Bioenergetics",
+        "text": "Analyzing mitochondrial function, glucose dynamics, and\nmetabolic biomarkers in blood plasma to measure cellular\nenergy production and systemic metabolic health.",
+        "image": "/images/area-2-1320.webp"
+      },
+      {
+        "title": "Inflammation & Immunity",
+        "text": "Tracking chronic low-grade inflammation (inflammaging)\nand immune cell degradation within blood plasma\nto evaluate immune system resilience and age.",
+        "image": "/images/area-3-1320.webp"
+      },
+      {
+        "title": "Vascular Integrity",
+        "text": "Investigating endothelial health, arterial elasticity, and\nmicrovascular blood flow to determine the biological\nage and health of the cardiovascular system.",
+        "image": "/images/area-4-1320.webp"
+      },
+      {
+        "title": "Epigenetic Plasma Factors",
+        "text": "Examining circulating extracellular vesicles, cell-free\nDNA, and plasma signaling proteins that control\nsystemic tissue regeneration and gene expression.",
+        "image": "/images/area-5-1320.webp"
+      },
+      {
+        "title": "Organ Biomarkers",
+        "text": "Decoding molecular blood signatures to isolate\nlocalized aging trajectories for specific organ systems,\nincluding the liver, kidneys, and central nervous system.",
+        "image": "/images/area-6-1320.webp"
+      }
+    ]
+  },
+  "team": {
+    "label": "Key Researchers",
+    "title": "Bringing Different Disciplines Together to Better Understand",
+    "titleAccent": "the Biology of Aging.",
+    "headPhoto": "Selected Researcher",
+    "headName": "Name",
+    "headPosition": "Position",
+    "headFocus": "Research Focus",
+    "people": [
+      {
+        "name": "Olena Kovalenko",
+        "position": "Research Director",
+        "focus": "Biological Aging",
+        "photo": "/images/researcher-olena-kovalenko-445.webp"
+      },
+      {
+        "name": "Andrii Melnyk",
+        "position": "Molecular Biologist",
+        "focus": "Cellular Aging",
+        "photo": "/images/researcher-andrii-melnyk-445.webp"
+      },
+      {
+        "name": "Mariia Bondar",
+        "position": "Medical Researcher",
+        "focus": "Clinical Biomarkers",
+        "photo": "/images/researcher-mariia-bondar-445.webp"
+      },
+      {
+        "name": "Dmytro Levchenko",
+        "position": "Bioinformatician",
+        "focus": "Biological Data",
+        "photo": "/images/researcher-dmytro-levchenko-445.webp"
+      },
+      {
+        "name": "Iryna Hnatiuk",
+        "position": "Immunologist",
+        "focus": "Immune Aging",
+        "photo": "/images/researcher-iryna-hnatiuk-445.webp"
+      },
+      {
+        "name": "Oleksandr Koval",
+        "position": "Metabolomics Scientist",
+        "focus": "Metabolic Health",
+        "photo": "/images/researcher-oleksandr-koval-445.webp"
+      },
+      {
+        "name": "Kateryna Moroz",
+        "position": "Biostatistician",
+        "focus": "Statistical Modeling",
+        "photo": "/images/researcher-kateryna-moroz-445.webp"
+      },
+      {
+        "name": "Maksym Shevchuk",
+        "position": "Longevity Researcher",
+        "focus": "Healthy Longevity",
+        "photo": "/images/researcher-maksym-shevchuk-445.webp"
+      },
+      {
+        "name": "Anna Tymoshenko",
+        "position": "Genomics Researcher",
+        "focus": "Genetic Aging",
+        "photo": "/images/researcher-anna-tymoshenko-445.webp"
+      },
+      {
+        "name": "Serhii Marchenko",
+        "position": "Cell Biology Scientist",
+        "focus": "Cellular Renewal",
+        "photo": "/images/researcher-serhii-marchenko-445.webp"
+      },
+      {
+        "name": "Viktoriia Savchuk",
+        "position": "Inflammation Researcher",
+        "focus": "Chronic Inflammation",
+        "photo": "/images/researcher-viktoriia-savchuk-445.webp"
+      },
+      {
+        "name": "Roman Holub",
+        "position": "Data Science Researcher",
+        "focus": "Data Science Researcher",
+        "photo": "/images/researcher-roman-holub-445.webp"
+      }
+    ]
+  },
+  "partner": {
+    "label": "Partnerships",
+    "title": "Partner With Us to\nAdvance the Science\nof Aging Through Research,\nShared Data, New Findings\nand Collaboration",
+    "button": "Discuss a Partnership",
+    "image": "/images/partner-960.webp",
+    "points": [
+      {
+        "title": "Joint Research",
+        "text": "Collaborative studies that combine expertise, resources, and scientific perspectives."
+      },
+      {
+        "title": "Combined Expertise",
+        "text": "Biology, medicine, bioinformatics, and data science working together across disciplines."
+      },
+      {
+        "title": "Shared Data",
+        "text": "Responsible data exchange that helps uncover stronger patterns and validate new hypotheses."
+      },
+      {
+        "title": "Lasting Partnership",
+        "text": "Collaborative studies that combine expertise, resources, and scientific perspectives."
+      }
+    ]
+  },
+  "faq": {
+    "label": "Questions",
+    "titleStart": "Questions About",
+    "titleAccent": "Aging Research",
+    "titleEnd": "and Our Methods",
+    "text": "Answers to common questions about biological age, blood biomarkers, and the research conducted at BloodAge Research.",
+    "items": [
+      {
+        "question": "What is biological age?",
+        "answer": "Biological age is a measurement of how old your cells and tissues appear based on physiological metrics, functioning, and overall health status, rather than just the number of years since you were born."
+      },
+      {
+        "question": "How is biological age different\nfrom chronological age?",
+        "answer": "Chronological age reflects the exact number of years you have lived. Biological age describes how your body’s internal systems and processes are changing over time, which can be faster or slower than your calendar age depending on genetics, lifestyle, and environment."
+      },
+      {
+        "question": "Why is blood used\nto study aging?",
+        "answer": "Blood circulates through every major organ system, carrying proteins, metabolites, and cellular indicators. This makes blood a rich, non-invasive source of measurable biomarkers that dynamically reflect systemic health and functional aging."
+      },
+      {
+        "question": "Which biomarkers\ndo you study?",
+        "answer": "We analyze a comprehensive panel of blood markers, including inflammatory proteins, metabolic factors, lipid profiles, hormonal markers, cellular stress indicators, and organ-function metrics linked to biological decline."
+      },
+      {
+        "question": "How do you estimate\nbiological age?",
+        "answer": "We combine routine and specialized blood test data with machine learning algorithms trained on large-scale clinical population datasets. These models correlate complex combinations of biomarkers to estimate functional body age."
+      },
+      {
+        "question": "What can biomarkers\nreveal about aging?",
+        "answer": "Biomarkers can reveal hidden systemic inflammation, metabolic dysfunction, accelerated organ wear, and metabolic inefficiencies before noticeable symptoms or age-related conditions manifest."
+      },
+      {
+        "question": "Can biomarkers\npredict disease?",
+        "answer": "While blood biomarkers do not offer diagnosis on their own, subclinical trends in specific markers can highlight elevated risks for cardiovascular diseases, metabolic disorders, and systemic decline years in advance."
+      },
+      {
+        "question": "Can organizations collaborate\nwith BloodAge Research?",
+        "answer": "Yes, we actively partner with medical institutions, longevity clinics, clinical research organizations, and biotech companies to expand biomarker discovery and validate longevity models."
+      },
+      {
+        "question": "How accurate are blood-based biological age tests?",
+        "answer": "Our AI-driven algorithms are continuously calibrated against large-scale clinical databases to maintain high statistical accuracy. While individual variance exists, blood biomarkers provide one of the most reliable and clinically validated pictures of biological aging available today."
+      },
+      {
+        "question": "Can I lower or reverse my biological age?",
+        "answer": "Yes. Unlike chronological age, biological age is malleable. Evidence shows that targeted lifestyle interventions, optimized nutrition, exercise, sleep quality, stress management, and therapeutic protocols can slow down or positively alter biological age indicators."
+      },
+      {
+        "question": "How often should I test my blood for biological aging?",
+        "answer": "We recommend testing every 3 to 6 months. This timeframe allows sufficient duration to track actionable trends and measure the effectiveness of lifestyle or medical interventions without over-monitoring short-term fluctuations."
+      },
+      {
+        "question": "How is user data protected and kept confidential?",
+        "answer": "We strictly adhere to HIPAA and GDPR data security standards. All blood data and personal information are fully anonymized, encrypted in transit and at rest, and never shared with third parties without explicit authorization."
+      }
+    ]
+  },
+  "publications": {
+    "label": "Publications",
+    "title": "Latest Research and\nNew Findings Helping Us Better\nUnderstand ",
+    "titleAccent": "the Biology of Aging",
+    "allButton": "All Publications",
+    "allLink": "publications/",
+    "items": [
+      {
+        "title": "Blood Biomarkers\nand the Pace of Aging",
+        "text": "Blood biomarkers can reveal biological shifts\nover time and reflect the body’s internal state,\nshow how key systems respond throughout aging,\nand help researchers understand human aging.",
+        "readTime": "6 min. read",
+        "image": "/images/pub-1-405.webp",
+        "link": "publications/blood-biomarkers-pace-of-aging/"
+      },
+      {
+        "title": "Inflammation Signals\nAcross the Lifespan",
+        "text": "Inflammatory signals can change across life,\ninteract with other markers in the bloodstream,\nreveal patterns linked to stress and recovery,\nand show how aging develops through the years.",
+        "readTime": "5 min. read",
+        "image": "/images/pub-2-405.webp",
+        "link": "publications/inflammation-signals-across-lifespan/"
+      },
+      {
+        "title": "Finding Patterns\nin Long-Term Blood Data",
+        "text": "Long-term blood data can reveal repeated links\nbetween biomarkers and changing body systems,\nshow how biological signals evolve over time,\nand uncover patterns across the aging process.",
+        "readTime": "7 min. read",
+        "image": "/images/pub-3-405.webp",
+        "link": "publications/patterns-in-long-term-blood-data/"
+      },
+      {
+        "title": "From Biomarkers\nto Biological Age",
+        "text": "Blood-based signals can indicate biological age\nbeyond the number of years a person has lived,\nshow how body systems change throughout life,\nand make aging easier to interpret through data.",
+        "readTime": "6 min. read",
+        "image": "/images/pub-4-405.webp",
+        "link": "publications/from-biomarkers-to-biological-age/"
+      }
+    ]
+  },
+  "contacts": {
+    "title": "Залиште заявку",
+    "text": "Ми зателефонуємо протягом 15 хвилин."
+  },
+  "thanks": {
+    "title": "Дякуємо за заявку!",
+    "text": "Ми зв'яжемося з вами найближчим часом.",
+    "button": "На головну"
+  }
+}

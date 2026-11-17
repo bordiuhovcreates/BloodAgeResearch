@@ -1,0 +1,84 @@
+---
+// Блок 9 — публікації (Figma: 383:363). Чотири однакові картки 445×636 у сітці 4 × 445 (PublicationCard.astro).
+// Шапка повторює перший екран: підпис ліворуч, заголовок 96 з відступом першого рядка, червона кнопка 910
+// на 40 нижче, картки — на 100 нижче кнопки. Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+import PublicationCard from './PublicationCard.astro';
+import blog from '../content/blog.json';
+import { getPublications, readTime } from '../lib/publications';
+const { publications: pubs } = home;
+// Час читання — з самої статті (якщо картка веде на publications/назва/), інакше — з тексту картки
+const posts = await getPublications();
+const timeFor = (link: string, fallback: string) => {
+  const post = posts.find((p) => link.replace(/\/$/, '').endsWith(`publications/${p.id}`));
+  return post ? `${readTime(post)} ${blog.minRead}` : fallback;
+};
+---
+<section class="block9" id="block-9">
+  <div class="block9__head">
+    <p class="block9__label">{pubs.label}</p>
+    <h2 class="block9__title t-h1">{pubs.title}{pubs.titleAccent && <span class="block9__accent">{pubs.titleAccent}</span>}</h2>
+  </div>
+
+  <a class="block9__all btn-split" href={url(pubs.allLink)}>
+    <span class="btn-split__bridge" aria-hidden="true"></span>
+    <span class="btn-split__main"><span data-decrypt>{pubs.allButton}</span></span>
+    <span class="btn-split__arrow" aria-hidden="true">
+      <img class="btn-split__icon" src={url('icons/arrow-right.svg')} alt="" width="25" height="25" />
+    </span>
+  </a>
+
+  <div class="block9__grid">
+    {pubs.items.map((item) => (
+      <PublicationCard href={item.link} title={item.title} text={item.text} readTime={timeFor(item.link, item.readTime)} image={item.image} />
+    ))}
+  </div>
+</section>
+
+<style>
+  /* 250 від Блоку 8. Шапка як на першому екрані: підпис на рівні першого рядка заголовка (на 10 нижче),
+     заголовок 96 з відступом першого рядка 320, рядки — з тексту (як у Figma) */
+  .block9 { margin-top: var(--section-gap); padding: 0 var(--gutter); }
+  .block9__head { position: relative; }
+  .block9__label { position: absolute; top: var(--gap-10); left: 0; color: var(--color-accent); }
+  .block9__title { white-space: pre; text-indent: calc(320 * var(--u)); }
+
+  /* 4 колонки 445 з проміжком 20 (на ширших екранах розтягуються) */
+  .block9__grid {
+    margin-top: calc(100 * var(--u));
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: var(--gap-20);
+    align-items: start;
+  }
+
+  /* Червона кнопка ліворуч, на 40 нижче заголовка, шириною в дві колонки карток (910 на макеті), як на першому екрані */
+  .block9__all { width: calc(50% - 10 * var(--u)); margin-top: var(--gap-40); }
+
+  /* Мобільна і планшет (Figma: mobile 409:3487, 9 section; макет 390). Підпис і заголовок 36 по центру
+     (4 рядки, кінець заголовка червоним), картки 350 в колонку через 20 на 50 нижче заголовка.
+     Червона кнопка «All Publications» — під картками, на 20 нижче останньої */
+  @media (max-width: 1023px) {
+    .block9__label { position: static; text-align: center; }
+    .block9__title {
+      margin-top: var(--gap-20);
+      font-size: var(--h2-size); /* у мобільному макеті заголовок 36, а не 40 */
+      line-height: var(--h2-lh);
+      text-align: center;
+      text-indent: 0;
+      white-space: normal;
+      text-wrap: wrap; /* рядки як у Figma: «Latest Research and / New Findings Helping / Us Better Understand / the Biology of Aging» */
+    }
+    .block9__accent { color: var(--color-accent); }
+    /* Кнопка «All Publications» (у мобільному макеті її немає — додана): під картками, на 20 нижче останньої */
+    .block9 { display: flex; flex-direction: column; }
+    .block9__all { order: 1; width: 100%; flex: none; margin-top: var(--gap-20); }
+    .block9__all .btn-split__icon { width: var(--gap-20); height: var(--gap-20); }
+    .block9__grid {
+      grid-template-columns: 1fr;
+      row-gap: var(--gap-20);
+      margin-top: calc(50 * var(--u));
+    }
+  }
+</style>

@@ -1,0 +1,145 @@
+---
+// Блок 3 — процес досліджень (Figma: 383:477). Картки 1840×881 «прилипають» по центру екрана,
+// і кожна наступна наїжджає на попередню (CSS sticky). Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { process } = home;
+---
+<section class="block3" id="block-3">
+  <p class="block3__label" data-anim="fade-up">{process.label}</p>
+  <h2 class="block3__title t-h2" data-anim="fade-up">{process.title}</h2>
+
+  <div class="block3__cards">
+    {process.steps.map((step, i) => (
+      <article class="block3__card">
+        <span class="block3__num" aria-hidden="true">{i + 1}</span>
+        <span class="block3__tag"><span class="block3__tag-num">{String(i + 1).padStart(2, '0')} / </span>{step.tag}</span>
+        {step.image && (
+          <img class="block3__img" src={url(step.image)} alt="" width="840" height="485" loading="lazy" decoding="async" />
+        )}
+        <h3 class="block3__heading t-h2">{step.title}</h3>
+        <p class="block3__text" style={`--w: ${step.textWidth || 300}`}>{step.text}</p>
+        <p class="block3__text block3__text--2">{step.text2}</p>
+        <button class="block3__btn btn-split" type="button" data-popup-open={`Процес: ${step.tag}`}>
+          <span class="btn-split__bridge" aria-hidden="true"></span>
+          <span class="btn-split__main"><span data-decrypt>{process.button}</span></span>
+          <span class="btn-split__arrow" aria-hidden="true">
+            <img class="btn-split__icon" src={url('icons/arrow-right.svg')} alt="" width="25" height="25" />
+          </span>
+        </button>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* 170 до підпису: разом із полем під Блоком 2 дає 250 від кола, як у макеті */
+  .block3 { padding: calc(170 * var(--u)) var(--gutter) 0; }
+  .block3__label { text-align: center; color: var(--color-accent); }
+  .block3__title { margin-top: calc(30 * var(--u)); text-align: center; }
+  /* flow-root: відступ 40 під останньою карткою лишається всередині контейнера (не «схлопується» назовні),
+     інакше контейнер коротший на 40 і третя картка відклеюється раніше, ніж на неї повністю наїде четверта */
+  .block3__cards { display: flow-root; margin-top: calc(100 * var(--u)); }
+
+  /* Картка: прилипає по центру екрана, наступна наїжджає зверху (881 завжди менше за екран — масштаб --u) */
+  .block3__card {
+    position: sticky;
+    top: max(0px, calc((100svh - 881 * var(--u)) / 2));
+    height: calc(881 * var(--u));
+    margin-bottom: var(--gap-40);
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-m);
+    background: var(--color-bg);
+  }
+  /* Лінія по центру картки (стиль — --line-style) */
+  .block3__card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 1px var(--line-style) var(--color-silver-gray);
+  }
+
+  .block3__num {
+    position: absolute;
+    left: var(--gap-40);
+    top: var(--gap-20);
+    font-size: var(--number-size);
+    line-height: 1;
+    color: var(--color-accent);
+  }
+  .block3__tag { position: absolute; right: calc(50% + 40 * var(--u)); top: var(--gap-40); }
+  .block3__img {
+    position: absolute;
+    left: var(--gap-40);
+    top: calc(356 * var(--u));
+    width: calc(50% - 80 * var(--u)); /* ліва половина картки з полями 40 */
+    height: calc(485 * var(--u));
+    max-width: none;
+    border-radius: var(--radius-m);
+    object-fit: cover;
+  }
+  .block3__heading {
+    position: absolute;
+    left: calc(50% + 40 * var(--u));
+    top: var(--gap-40);
+    white-space: pre-line; /* переноси з тексту, як у Figma */
+  }
+  .block3__text {
+    position: absolute;
+    left: calc(50% + 40 * var(--u));
+    top: calc(356 * var(--u));
+    width: calc(var(--w) * var(--u));
+  }
+  .block3__text--2 { left: calc(50% + 475 * var(--u)); width: calc(319 * var(--u)); }
+  .block3__btn {
+    position: absolute;
+    left: calc(50% + 40 * var(--u));
+    bottom: var(--gap-40);
+    width: calc(50% - 80 * var(--u)); /* права половина картки з полями 40 */
+  }
+  /* «01 / » перед темою — лише на мобільній (на десктопі номер великий окремо) */
+  .block3__tag-num { display: none; }
+
+  /* Мобільна і планшет (Figma: mobile 397:2859, 3 section; макет 390). Підпис і заголовок 36 по центру,
+     картки 350 × 614 на 50 нижче заголовка, через 20; так само прилипають і наїжджають одна на одну.
+     У картці (поля 20) усе в колонку через 20: «01 / Тема», заголовок 36, фото 310 × 179, два абзаци, кнопка 60.
+     Великого номера й лінії по центру на мобільній немає */
+  @media (max-width: 1023px) {
+    /* Відступ від Блоку 2 — 100 від низу кола (блок 2 стоїть по центру екрана, тож віднімаємо його нижнє поле) */
+    .block3 { padding-top: max(0px, calc(100 * var(--u) - (100svh - 586 * var(--u)) / 2)); }
+    .block3__title { margin-top: var(--gap-20); }
+    .block3__cards { margin-top: calc(50 * var(--u)); }
+    .block3__card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-20);
+      top: max(0px, calc((100svh - 614 * var(--u)) / 2));
+      height: calc(614 * var(--u));
+      margin-bottom: var(--gap-20);
+      padding: calc(20 * var(--u) - 1px); /* мінус рамка */
+    }
+    .block3__card::after,
+    .block3__num { display: none; }
+    .block3__tag-num { display: inline; }
+    .block3__tag,
+    .block3__img,
+    .block3__heading,
+    .block3__text { position: static; }
+    .block3__btn { position: relative; left: auto; bottom: auto; } /* relative — частини кнопки позиціюються всередині неї */
+    .block3__tag { color: var(--color-accent); }
+    .block3__heading { white-space: normal; text-wrap: balance; }
+    .block3__img {
+      order: 1; /* фото під заголовком */
+      width: 100%;
+      height: calc(178.988 * var(--u));
+      border-radius: var(--radius-s);
+    }
+    .block3__heading { order: 0; }
+    .block3__text,
+    .block3__text--2 { order: 2; width: auto; text-wrap: balance; }
+    .block3__btn { order: 3; width: 100%; flex: none; }
+    .block3__btn .btn-split__icon { width: var(--gap-20); height: var(--gap-20); }
+  }
+</style>

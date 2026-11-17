@@ -1,0 +1,118 @@
+---
+// Меню (Figma: pc menu) у панелі праворуч: шість пунктів 96 (H1) через 20, червона кнопка внизу відкриває форму заявки.
+// Кнопка меню закріплена в правому верхньому куті на всьому сайті (40 від країв) і лежить над панеллю:
+// при відкритті її три смужки перетворюються на хрестик, при закритті — назад.
+// Завжди червоний квадрат з білими смужками; лежить над усім сайтом (крім курсора).
+// Пункти по черзі підлітають справа й проявляються слідом за панеллю; наведення — червоний і «розшифровка».
+import Panel from './Panel.astro';
+import settings from '../content/settings.json';
+import { url, navHref } from '../lib/url';
+const { menu } = settings;
+const path = Astro.url.pathname;
+---
+<button class="menu-toggle" type="button" aria-label={menu.label} aria-expanded="false" data-menu-toggle>
+  <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span><span></span></span>
+</button>
+
+<Panel name="menu" label={menu.label} closeLabel={menu.closeLabel} toggle>
+  <nav class="menu" aria-label={menu.label}>
+    <ul class="menu__list" role="list">
+      {menu.links.map((l, i) => (
+        <li class="menu__item" style={`--i: ${i}`}>
+          <a class="menu__link t-h1" href={navHref(l.href, path)} data-menu-link><span data-decrypt>{l.label}</span></a>
+        </li>
+      ))}
+    </ul>
+    <div class="menu__item menu__bottom" style={`--i: ${menu.links.length}`}>
+      <button class="menu__btn btn-split" type="button" data-popup-open="Меню">
+        <span class="btn-split__bridge" aria-hidden="true"></span>
+        <span class="btn-split__main"><span data-decrypt>{menu.button}</span></span>
+        <span class="btn-split__arrow" aria-hidden="true">
+          <img class="btn-split__icon menu__icon" src={url('icons/arrow-right.svg')} alt="" width="20" height="20" />
+        </span>
+      </button>
+    </div>
+  </nav>
+</Panel>
+
+<style>
+  /* Закріплена кнопка 60×60 — над усім сайтом і панеллю меню (нижче лише курсор), на 40 від верху і правого краю */
+  .menu-toggle {
+    position: fixed;
+    z-index: 990;
+    top: var(--gutter);
+    right: var(--gutter);
+    display: grid;
+    place-items: center;
+    width: var(--control-height);
+    height: var(--control-height);
+    border-radius: var(--radius-s);
+    background: var(--color-accent);
+  }
+  .menu-toggle:focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; }
+
+  /* Бургер 24 × 3 смужки (як іконка меню з Figma) → хрестик */
+  .menu-toggle__bars { position: relative; width: calc(24 * var(--u)); height: calc(24 * var(--u)); }
+  .menu-toggle__bars span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: calc(8 / 3 * var(--u));
+    margin-top: calc(-4 / 3 * var(--u));
+    background: var(--color-white);
+    transition:
+      transform var(--duration-toggle) var(--ease-split),
+      opacity var(--duration-toggle) var(--ease-split);
+  }
+  .menu-toggle__bars span:nth-child(1) { transform: translateY(calc(-20 / 3 * var(--u))); }
+  .menu-toggle__bars span:nth-child(3) { transform: translateY(calc(20 / 3 * var(--u))); }
+  .menu-toggle.is-open .menu-toggle__bars span:nth-child(1) { transform: translateY(0) rotate(45deg); }
+  .menu-toggle.is-open .menu-toggle__bars span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .menu-toggle.is-open .menu-toggle__bars span:nth-child(3) { transform: translateY(0) rotate(-45deg); }
+
+  /* Мобільна (Figma: mobile 396:2017, іконка boxicons:menu-close-filled 414:326): квадрат 35 на 20 від верху
+     і правого краю; три смужки 15 × 1.68 з кроком 4.19 по центру квадрата */
+  @media (max-width: 1023px) {
+    .menu-toggle { width: calc(35 * var(--u)); height: calc(35 * var(--u)); }
+    .menu-toggle__bars { width: calc(15 * var(--u)); height: calc(10.06 * var(--u)); }
+    .menu-toggle__bars span { height: calc(1.68 * var(--u)); margin-top: calc(-0.84 * var(--u)); }
+    .menu-toggle__bars span:nth-child(1) { transform: translateY(calc(-4.19 * var(--u))); }
+    .menu-toggle__bars span:nth-child(3) { transform: translateY(calc(4.19 * var(--u))); }
+  }
+
+  .menu { position: relative; height: 100%; }
+  /* Пункти: перший на 22 від верху панелі, далі через 20 (рядки 96) */
+  .menu__list {
+    position: absolute;
+    top: calc(22 * var(--u) - var(--gutter));
+    left: 0;
+    display: grid;
+    gap: var(--gap-20);
+  }
+  .menu__link { display: inline-block; transition: color 0.3s var(--ease-soft); }
+  .menu__link:is(:hover, :focus-visible) { color: var(--color-accent); }
+  .menu__bottom { position: absolute; left: 0; right: 0; bottom: 0; }
+  .menu__icon { width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
+
+  /* Мобільна і планшет (Figma: mobile menu 417:434): пункти 40 з самого верху панелі (20 від краю екрана)
+     через 10, червона кнопка 350 × 60 унизу на 20 від краю */
+  @media (max-width: 1023px) {
+    .menu__list { top: 0; gap: var(--gap-10); }
+  }
+
+
+  /* Пункти по черзі підлітають справа на 80 і проявляються (крок 0.06 с); при закритті — гаснуть разом одразу */
+  .menu__item {
+    opacity: 0;
+    translate: calc(80 * var(--u)) 0;
+    transition: opacity 0.2s var(--ease-soft), translate 0.3s var(--ease-menu);
+  }
+  :global(.panel.is-open) .menu__item {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity 0.5s var(--ease-soft) calc(0.25s + var(--i) * 0.06s),
+      translate 0.7s var(--ease-menu) calc(0.25s + var(--i) * 0.06s);
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+// Картка публікації (Figma: Блок 9, 383:363) — однакова на головній і на сторінці публікацій.
+// Картка 445×636: фото 300, назва, опис, лінія і нижній рядок «час читання + квадрат зі стрілкою».
+// Наведення як на старому сайті: фото під курсором збільшується, квадрат заливається червоним,
+// біла стрілка вилітає праворуч і повертається зліва. Переноси в назві й описі — з тексту (\n),
+// довший текст переноситься сам. Розміри — px макета 1920 × --u.
+import { url } from '../lib/url';
+
+interface Props {
+  href: string;
+  title: string;
+  text: string;
+  readTime: string;
+  image?: string;
+}
+const { href, title, text, readTime, image } = Astro.props;
+const arrow = `--icon: url(${url('icons/arrow-right-dark.svg')})`;
+// pub-1-405.webp → поруч лежить pub-1-810.webp для чітких екранів
+const srcset = image && /-405\.webp$/.test(image)
+  ? `${url(image)} 405w, ${url(image.replace(/-405\.webp$/, '-810.webp'))} 810w`
+  : undefined;
+---
+<a class="pub-card" href={url(href)}>
+  <span class="pub-card__img">
+    {image && (
+      <img src={url(image)} srcset={srcset} sizes="(min-width: 1024px) 21vw, 90vw" alt="" width="405" height="300" loading="lazy" decoding="async" />
+    )}
+  </span>
+  <h3 class="pub-card__name">{title}</h3>
+  <p class="pub-card__text">{text}</p>
+  <span class="pub-card__foot">
+    <span>{readTime}</span>
+    <span class="pub-card__icon" aria-hidden="true"><span class="pub-card__arrow" style={arrow}></span></span>
+  </span>
+</a>
+
+<style>
+  /* Картка 445×636: фото 300, назва, опис; лінія на 548, під нею нижній рядок з відступами 20 */
+  .pub-card {
+    position: relative;
+    display: block;
+    height: calc(636 * var(--u));
+    padding: calc(20 * var(--u) - 1px); /* мінус рамка */
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-m);
+  }
+  .pub-card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(548 * var(--u) - 1px);
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .pub-card:focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; }
+
+  .pub-card__img {
+    display: block;
+    height: calc(300 * var(--u));
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    background: var(--color-soft);
+  }
+  .pub-card__img img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  .pub-card__name { margin-top: var(--gap-40); font-size: var(--h3-size); line-height: var(--h3-lh); white-space: pre-line; }
+  .pub-card__text { margin-top: var(--gap-20); line-height: 1.01; white-space: pre-line; }
+
+  .pub-card__foot {
+    position: absolute;
+    left: calc(20 * var(--u) - 1px);
+    right: calc(20 * var(--u) - 1px);
+    bottom: calc(20 * var(--u) - 1px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    line-height: 1.01;
+  }
+  /* Квадрат 48 зі стрілкою 25 */
+  .pub-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(48 * var(--u));
+    height: calc(48 * var(--u));
+    overflow: hidden;
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-s);
+    transition: background-color 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft);
+  }
+  .pub-card__arrow {
+    width: calc(25 * var(--u));
+    height: calc(25 * var(--u));
+    background: var(--color-text);
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+    transition: background-color 0.3s var(--ease-soft);
+  }
+
+  /* Кожне наведення окреме: фото збільшується лише під курсором, квадрат — коли наведено на нього */
+  @media (hover: hover) {
+    .pub-card__img:hover img { transform: scale(1.15); }
+    .pub-card__icon:hover { background: var(--color-accent); border-color: var(--color-accent); }
+    .pub-card__icon:hover .pub-card__arrow { background: var(--color-white); animation: pub-card-arrow-out 0.6s var(--ease-out); }
+  }
+  /* Мобільна і планшет (Figma: mobile 409:3487, Сard News): картка 350 × 430, фото 310 × 179, назва 20 на 20 нижче,
+     опис на 20 нижче; лінія на 355, під нею час читання і квадрат 35 зі стрілкою 18.2 (20 від краю) */
+  @media (max-width: 1023px) {
+    .pub-card { height: calc(430 * var(--u)); }
+    .pub-card::after { top: calc(355 * var(--u) - 1px); }
+    .pub-card__img { height: calc(178.988 * var(--u)); border-radius: var(--radius-s); }
+    .pub-card__name { margin-top: var(--gap-20); }
+    .pub-card__icon { width: calc(35 * var(--u)); height: calc(35 * var(--u)); }
+    .pub-card__arrow { width: calc(18.229 * var(--u)); height: calc(18.229 * var(--u)); }
+  }
+  @keyframes pub-card-arrow-out {
+    0% { transform: translateX(0); opacity: 1; }
+    35% { transform: translateX(calc(30 * var(--u))); opacity: 0; }
+    36% { transform: translateX(calc(-30 * var(--u))); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+</style>

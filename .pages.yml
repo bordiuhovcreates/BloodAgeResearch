@@ -1,0 +1,659 @@
+# Налаштування адмінки Pages CMS (app.pagescms.org)
+# Тут описано, що клієнт може редагувати. Додаєте новий блок на сайт —
+# попросіть Claude додати його поля і сюди.
+
+media:
+  input: public/images
+  output: /images
+content:
+- name: settings
+  label: Налаштування сайту
+  type: file
+  path: src/content/settings.json
+  format: json
+  fields:
+  - name: seo
+    label: SEO
+    type: object
+    fields:
+    - name: title
+      label: Заголовок сторінки
+      type: string
+    - name: description
+      label: Опис для пошуку
+      type: text
+    - name: ogImage
+      label: Картинка для соцмереж (1200×630)
+      type: image
+  - name: header
+    label: Шапка
+    type: object
+    fields:
+    - name: logo
+      label: Текст логотипа
+      type: string
+    - name: button
+      label: Текст кнопки
+      type: string
+    - name: nav
+      label: Пункти меню
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: 'Посилання на блок, наприклад #block-3'
+        type: string
+  - name: contacts
+    label: Контакти
+    type: object
+    fields:
+    - name: phone
+      label: Телефон
+      type: string
+    - name: email
+      label: Email
+      type: string
+    - name: address
+      label: Адреса
+      type: string
+  - name: footer
+    label: Підвал
+    type: object
+    fields:
+    - name: lead
+      label: Текст над полем e-mail
+      type: string
+    - name: newsletter
+      label: Підписка на розсилку (поле e-mail)
+      type: object
+      fields:
+      - name: placeholder
+        label: Підказка в полі
+        type: string
+      - name: button
+        label: Назва кнопки для незрячих (не видно на сайті)
+        type: string
+      - name: sending
+        label: Текст під час надсилання
+        type: string
+      - name: success
+        label: Подяка після підписки
+        type: string
+      - name: error
+        label: Текст помилки
+        type: string
+    - name: sitemapLabel
+      label: Підпис колонки з посиланнями на блоки
+      type: string
+    - name: sitemap
+      label: Посилання на блоки (по 3 в колонці)
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: 'Посилання, наприклад #block-3'
+        type: string
+    - name: socialLabel
+      label: Підпис колонки соцмереж
+      type: string
+    - name: social
+      label: Соцмережі
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: Посилання на сторінку
+        type: string
+    - name: contactLabel
+      label: Підпис колонки контактів (самі контакти — у розділі «Контакти» вище)
+      type: string
+    - name: copyright
+      label: Копірайт (сірий, унизу ліворуч)
+      type: string
+    - name: terms
+      label: Текст посилання «Умови використання»
+      type: string
+    - name: termsLink
+      label: Посилання «Умови використання»
+      type: string
+    - name: privacy
+      label: Текст посилання «Політика конфіденційності»
+      type: string
+    - name: privacyLink
+      label: Посилання «Політика конфіденційності»
+      type: string
+    - name: rights
+      label: Текст «Усі права захищено»
+      type: string
+    - name: credit
+      label: Підпис розробника (унизу праворуч)
+      type: string
+    - name: creditLink
+      label: Посилання розробника
+      type: string
+    - name: wordmark
+      label: Великий сірий напис унизу
+      type: string
+  - name: menu
+    label: Меню (відкривається червоною кнопкою на першому екрані)
+    type: object
+    fields:
+    - name: links
+      label: Пункти меню
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Назва
+        type: string
+      - name: href
+        label: 'Посилання на блок, наприклад #block-3'
+        type: string
+    - name: button
+      label: Текст червоної кнопки внизу меню (відкриває форму заявки)
+      type: string
+    - name: label
+      label: Назва меню для незрячих (не видно на сайті)
+      type: string
+    - name: closeLabel
+      label: Назва кнопки «Закрити» для незрячих (не видно на сайті)
+      type: string
+  - name: forms
+    label: Форми заявок (панель праворуч)
+    type: object
+    fields:
+    - name: nameLabel
+      label: Підпис поля імені
+      type: string
+    - name: namePlaceholder
+      label: Підказка в полі імені
+      type: string
+    - name: emailLabel
+      label: Підпис поля e-mail
+      type: string
+    - name: emailPlaceholder
+      label: Підказка в полі e-mail
+      type: string
+    - name: phoneLabel
+      label: Підпис поля телефону
+      type: string
+    - name: phonePlaceholder
+      label: Підказка в полі телефону
+      type: string
+    - name: error
+      label: Текст помилки надсилання
+      type: string
+    - name: success
+      label: Текст подяки після надсилання (у рамці на місці форми)
+      type: string
+    - name: closeLabel
+      label: Назва кнопки «Закрити» для незрячих (не видно на сайті)
+      type: string
+    - name: patient
+      label: Форма для пацієнта (кнопки «Request Access»)
+      type: object
+      fields:
+      - name: title
+        label: Заголовок (новий рядок — перенос)
+        type: text
+      - name: button
+        label: Текст кнопки надсилання
+        type: string
+      - name: service
+        label: Назва форми в заявці (видно в таблиці)
+        type: string
+    - name: partner
+      label: Форма для партнера (кнопка «Discuss a Partnership»)
+      type: object
+      fields:
+      - name: title
+        label: Заголовок (новий рядок — перенос)
+        type: text
+      - name: button
+        label: Текст кнопки надсилання
+        type: string
+      - name: service
+        label: Назва форми в заявці (видно в таблиці)
+        type: string
+- name: home
+  label: Головна сторінка
+  type: file
+  path: src/content/home.json
+  format: json
+  fields:
+  - name: hero
+    label: Перший екран
+    type: object
+    fields:
+    - name: brand
+      label: Назва (червоний текст угорі зліва)
+      type: string
+    - name: location
+      label: Місто (угорі праворуч)
+      type: string
+    - name: title
+      label: Заголовок (новий рядок — перенос, як у макеті)
+      type: text
+    - name: subtitle
+      label: Опис праворуч від кнопки (кожен новий рядок — перенос на десктопі)
+      type: text
+    - name: button
+      label: Текст кнопки
+      type: string
+    - name: videoAv1
+      label: Фонове відео — легка версія AV1 (MP4). Можна лишити порожнім
+      type: file
+    - name: video
+      label: Фонове відео — основна версія H.264 (MP4, без звуку, грає по колу)
+      type: file
+    - name: poster
+      label: Кадр, який видно до завантаження відео
+      type: image
+    - name: scrollLabel
+      label: Підпис індикатора прокрутки (відсоток додається сам)
+      type: string
+    - name: news
+      label: Картка публікації
+      type: object
+      fields:
+      - name: label
+        label: Підпис угорі картки
+        type: string
+      - name: title
+        label: Назва публікації
+        type: string
+      - name: subtitle
+        label: Підзаголовок (сірий)
+        type: string
+      - name: image
+        label: Зображення (квадратне)
+        type: image
+      - name: link
+        label: Посилання на публікацію
+        type: string
+  - name: mission
+    label: Блок 2 — Місія (кроки змінюються при прокрутці)
+    type: object
+    fields:
+    - name: label
+      label: Маленький підпис над заголовком
+      type: string
+    - name: title
+      label: Заголовок — чорний рядок
+      type: string
+    - name: titleAccent
+      label: Заголовок — червоний рядок
+      type: string
+    - name: scrollLabel
+      label: Підпис праворуч (сірий)
+      type: string
+    - name: steps
+      label: Кроки (коло заповнюється червоним від першого до останнього)
+      type: object
+      list: true
+      fields:
+      - name: label
+        label: Підпис кроку ліворуч (наприклад, 01 / BLOOD SAMPLE)
+        type: string
+      - name: title
+        label: Назва в колі (червона)
+        type: string
+      - name: text
+        label: Опис під зображенням
+        type: text
+      - name: image
+        label: Зображення в центрі кола (WebP/PNG з прозорим фоном, квадратне)
+        type: image
+      - name: imageSize
+        label: Розмір зображення, px макета (близько 300)
+        type: number
+      - name: imageShift
+        label: Зсув зображення вправо, px макета (зазвичай 0)
+        type: number
+  - name: process
+    label: Блок 3 — Процес досліджень (картки наїжджають одна на одну при прокрутці)
+    type: object
+    fields:
+    - name: label
+      label: Маленький червоний підпис над заголовком
+      type: string
+    - name: title
+      label: Заголовок
+      type: string
+    - name: button
+      label: Текст кнопки в кожній картці
+      type: string
+    - name: steps
+      label: Картки (номер ставиться автоматично)
+      type: object
+      list: true
+      fields:
+      - name: tag
+        label: Підпис угорі праворуч від номера
+        type: string
+      - name: title
+        label: Великий заголовок (новий рядок — перенос, як у макеті)
+        type: text
+      - name: text
+        label: Текст — ліва колонка
+        type: text
+      - name: textWidth
+        label: Ширина лівої колонки тексту, px макета (близько 300)
+        type: number
+      - name: text2
+        label: Текст — права колонка
+        type: text
+      - name: image
+        label: Фото (горизонтальне, 840×485 або більше)
+        type: image
+  - name: impact
+    label: Блок 4 — Науковий вплив (червоний фон, цифри)
+    type: object
+    fields:
+    - name: label
+      label: Маленький підпис угорі
+      type: string
+    - name: title
+      label: Великий текст (проявляється по літерах при прокрутці)
+      type: text
+    - name: image
+      label: Фонове зображення (рухається за мишкою), 1920×1080
+      type: image
+    - name: stats
+      label: Цифри (рахуються від 0, рівно 4)
+      type: object
+      list: true
+      fields:
+      - name: value
+        label: Число
+        type: number
+      - name: suffix
+        label: Знак після числа (наприклад, +), можна порожнім
+        type: string
+      - name: label
+        label: Підпис під числом
+        type: string
+  - name: areas
+    label: Блок 5 — Напрями досліджень (змінюються при прокрутці)
+    type: object
+    fields:
+    - name: label
+      label: Маленький червоний підпис над заголовком
+      type: string
+    - name: title
+      label: Заголовок
+      type: string
+    - name: lead
+      label: Сірий текст праворуч угорі
+      type: text
+    - name: tag
+      label: Підпис праворуч угорі
+      type: string
+    - name: items
+      label: Напрями (номер ставиться автоматично, найкраще 6)
+      type: object
+      list: true
+      fields:
+      - name: title
+        label: Назва
+        type: string
+      - name: text
+        label: Опис — рівно 3 рядки (кожен новий рядок — перенос)
+        type: text
+      - name: image
+        label: Фото ліворуч (вертикальне, близько 880×926)
+        type: image
+  - name: team
+    label: Блок 6 — Дослідники (фото змінюється при наведенні на рядок)
+    type: object
+    fields:
+    - name: label
+      label: Маленький червоний підпис над заголовком
+      type: string
+    - name: title
+      label: Заголовок — чорна частина
+      type: string
+    - name: titleAccent
+      label: Заголовок — червоний рядок
+      type: string
+    - name: headPhoto
+      label: Підпис колонки з фото
+      type: string
+    - name: headName
+      label: Підпис колонки «Ім'я»
+      type: string
+    - name: headPosition
+      label: Підпис колонки «Посада»
+      type: string
+    - name: headFocus
+      label: Підпис колонки «Напрям»
+      type: string
+    - name: people
+      label: Дослідники
+      type: object
+      list: true
+      fields:
+      - name: name
+        label: Ім'я
+        type: string
+      - name: position
+        label: Посада
+        type: string
+      - name: focus
+        label: Напрям досліджень
+        type: string
+      - name: photo
+        label: Фото (квадратне, від 890×890)
+        type: image
+  - name: partner
+    label: Блок 7 — Партнерство (червоний екран)
+    type: object
+    fields:
+    - name: label
+      label: Маленький підпис угорі
+      type: string
+    - name: title
+      label: Заголовок (новий рядок — перенос, як у макеті)
+      type: text
+    - name: button
+      label: Текст білої кнопки
+      type: string
+    - name: image
+      label: Фото праворуч (на пів екрана, від 960×1080)
+      type: image
+    - name: points
+      label: Пункти внизу (найкраще 4, по 2 в ряд)
+      type: object
+      list: true
+      fields:
+      - name: title
+        label: Назва
+        type: string
+      - name: text
+        label: Опис
+        type: text
+  - name: faq
+    label: Блок 8 — Питання та відповіді
+    type: object
+    fields:
+    - name: label
+      label: Маленький підпис над заголовком
+      type: string
+    - name: titleStart
+      label: Заголовок — 1-й рядок (чорний)
+      type: string
+    - name: titleAccent
+      label: Заголовок — 2-й рядок (червоний)
+      type: string
+    - name: titleEnd
+      label: Заголовок — 3-й рядок (чорний)
+      type: string
+    - name: text
+      label: Текст ліворуч унизу
+      type: text
+    - name: items
+      label: Питання (червона цифра над списком рахується сама)
+      type: object
+      list: true
+      fields:
+      - name: question
+        label: Питання (новий рядок — перенос на телефоні)
+        type: text
+      - name: answer
+        label: Відповідь
+        type: text
+  - name: publications
+    label: Блок 9 — Публікації
+    type: object
+    fields:
+    - name: label
+      label: Маленький червоний підпис над заголовком
+      type: string
+    - name: title
+      label: Заголовок (3 рядки, як на першому екрані; новий рядок — перенос)
+      type: text
+    - name: titleAccent
+      label: Кінець заголовка (на телефоні червоним, на комп'ютері продовжує третій рядок)
+      type: string
+    - name: allButton
+      label: Текст червоної кнопки під заголовком
+      type: string
+    - name: allLink
+      label: Посилання червоної кнопки (наприклад, на сторінку зі статтями)
+      type: string
+    - name: items
+      label: Статті (найкраще 4, в один ряд)
+      type: object
+      list: true
+      fields:
+      - name: title
+        label: Назва (новий рядок — перенос)
+        type: text
+      - name: text
+        label: Короткий опис (4 рядки, кожен новий рядок — перенос)
+        type: text
+      - name: readTime
+        label: Час читання (якщо картка веде на статтю — рахується з тексту статті сам)
+        type: string
+      - name: image
+        label: Фото (горизонтальне, 810×600 або більше)
+        type: image
+      - name: link
+        label: Посилання на статтю
+        type: string
+  - name: contacts
+    label: Блок заявки
+    type: object
+    fields:
+    - name: title
+      label: Заголовок
+      type: string
+    - name: text
+      label: Текст
+      type: text
+  - name: thanks
+    label: Сторінка подяки
+    type: object
+    fields:
+    - name: title
+      label: Заголовок
+      type: string
+    - name: text
+      label: Текст
+      type: text
+    - name: button
+      label: Текст кнопки
+      type: string
+- name: legal-pages
+  label: Юридичні сторінки (Privacy Policy, Terms of Use)
+  type: collection
+  path: src/content/legal
+  format: yaml-frontmatter
+  filename: '{primary}.md'
+  fields:
+  - name: title
+    label: Заголовок
+    type: string
+    required: true
+  - name: description
+    label: Опис для пошуку Google
+    type: text
+    required: true
+  - name: updated
+    label: Дата останнього оновлення
+    type: date
+    required: true
+  - name: body
+    label: Текст (розділи — заголовки другого рівня)
+    type: rich-text
+- name: legal-texts
+  label: Юридичні сторінки — підписи
+  type: file
+  path: src/content/legal.json
+  format: json
+  fields:
+  - name: updated
+    label: Текст перед датою оновлення (Last updated)
+    type: string
+  - name: home
+    label: Назва вгорі сторінки (посилання на головну)
+    type: string
+- name: publications
+  label: Публікації — статті
+  type: collection
+  path: src/content/publications
+  format: yaml-frontmatter
+  filename: '{primary}.md'
+  view:
+    fields: [title, category, date]
+    sort: [date]
+  fields:
+  - name: title
+    label: Заголовок статті
+    type: string
+    required: true
+  - name: description
+    label: Короткий опис (картка статті, вступ над текстом і пошук Google)
+    type: text
+    required: true
+  - name: category
+    label: Тема (за нею працює фільтр на сторінці публікацій)
+    type: string
+    required: true
+  - name: date
+    label: Дата публікації
+    type: date
+    required: true
+  - name: image
+    label: Фото для картки (405×300; для чітких екранів поруч кладіть версію -810)
+    type: image
+    required: true
+  - name: draft
+    label: Чернетка (не показувати на сайті)
+    type: boolean
+  - name: body
+    label: Текст статті (розділи — заголовки другого рівня; підпис до фото — у назві фото)
+    type: rich-text
+- name: blog
+  label: Сторінка публікацій — тексти
+  type: file
+  path: src/content/blog.json
+  format: json
+  fields:
+  - { name: seoTitle, label: "Заголовок сторінки для пошуку", type: string }
+  - { name: seoDescription, label: "Опис сторінки для пошуку Google", type: text }
+  - { name: label, label: "Червоний підпис над заголовком", type: string }
+  - { name: title, label: "Заголовок сторінки (новий рядок — перенос)", type: text }
+  - { name: all, label: "Назва вкладки з усіма статтями", type: string }
+  - { name: empty, label: "Текст, якщо в темі ще немає статей", type: string }
+  - { name: minRead, label: "Підпис часу читання (min. read)", type: string }
+  - { name: category, label: "Назва фільтра тем для незрячих (не видно на сайті)", type: string }

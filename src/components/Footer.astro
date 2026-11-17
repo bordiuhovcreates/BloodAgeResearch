@@ -1,0 +1,218 @@
+---
+// Підвал (Figma: 383:535 «9 section»). Лінії на всю ширину на 0 / 200 / 358, вертикальні — на 505 / 970 / 1435;
+// чотири колонки (підписка, мапа сайту, соцмережі, контакти) і нижній рядок; унизу великий сірий напис.
+// Наведення як на старому сайті: посилання червоніють, кнопка підписки чорніє (стрілка вилітає праворуч),
+// кнопка «наверх» заливається червоним (стрілка вилітає вгору). Розміри — px макета 1920 × --u.
+import settings from '../content/settings.json';
+import { url, navHref } from '../lib/url';
+import LeadForm from './LeadForm.astro';
+const { footer, contacts } = settings;
+const arrow = `--icon: url(${url('icons/arrow-right-dark.svg')})`;
+const col1 = footer.sitemap.slice(0, 3);
+const col2 = footer.sitemap.slice(3);
+// Посилання на блоки (#block-3): на головній — сам якір, на інших сторінках — головна + якір
+const link = (h: string) => navHref(h, Astro.url.pathname);
+const isHome = navHref('#', Astro.url.pathname) === '#';
+const tel = `tel:${contacts.phone.replace(/[^\d+]/g, '')}`;
+---
+<footer class="footer" id="contact">
+  <div class="footer__top">
+    <span class="footer__vline footer__vline--1" aria-hidden="true"></span>
+    <span class="footer__vline footer__vline--2" aria-hidden="true"></span>
+    <span class="footer__vline footer__vline--3" aria-hidden="true"></span>
+
+    <p class="footer__lead">{footer.lead}</p>
+    <div class="footer__newsletter">
+      <LeadForm variant="newsletter" texts={footer.newsletter} />
+    </div>
+
+    <p class="footer__label footer__x-sitemap">{footer.sitemapLabel}</p>
+    <ul class="footer__links footer__x-sitemap" role="list">
+      {col1.map((l) => <li><a href={link(l.href)}><span data-decrypt>{l.label}</span></a></li>)}
+    </ul>
+    <ul class="footer__links footer__x-sitemap2" role="list">
+      {col2.map((l) => <li><a href={link(l.href)}><span data-decrypt>{l.label}</span></a></li>)}
+    </ul>
+
+    <p class="footer__label footer__x-social">{footer.socialLabel}</p>
+    <ul class="footer__links footer__x-social" role="list">
+      {footer.social.map((l) => <li><a href={l.href} target="_blank" rel="noopener noreferrer"><span data-decrypt>{l.label}</span></a></li>)}
+    </ul>
+
+    <p class="footer__label footer__x-contact">{footer.contactLabel}</p>
+    <ul class="footer__links footer__x-contact" role="list">
+      <li><a href={`mailto:${contacts.email}`}><span data-decrypt>{contacts.email}</span></a></li>
+      <li><a href={tel}><span data-decrypt>{contacts.phone}</span></a></li>
+      <li>{contacts.address}</li>
+    </ul>
+
+    <a class="footer__up" href={isHome ? '#block-1' : '#'} aria-label="Back to top"><span class="footer__arrow footer__arrow--up" style={arrow}></span></a>
+
+    <span class="footer__copy">{footer.copyright}</span>
+    <a class="footer__small footer__x-sitemap" href={url(footer.termsLink)}><span data-decrypt>{footer.terms}</span></a>
+    <a class="footer__small footer__x-privacy" href={url(footer.privacyLink)}><span data-decrypt>{footer.privacy}</span></a>
+    <span class="footer__small footer__x-social">{footer.rights}</span>
+    <a class="footer__small footer__credit" href={footer.creditLink} target="_blank" rel="noopener noreferrer"><span data-decrypt>{footer.credit}</span></a>
+  </div>
+  <div class="footer__mark" aria-hidden="true" data-fit-text><span>{footer.wordmark}</span></div>
+</footer>
+
+<style>
+  /* 250 від останнього блоку; лінії — на всю ширину екрана */
+  .footer { position: relative; margin-top: var(--section-gap); overflow: hidden; }
+  .footer__top {
+    position: relative;
+    height: calc(358 * var(--u));
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+    border-bottom: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .footer__top::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(200 * var(--u));
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .footer__vline { position: absolute; top: 0; bottom: 0; border-left: 1px var(--line-style) var(--color-silver-gray); }
+  .footer__vline--1 { left: calc(25% + 25 * var(--u)); }
+  .footer__vline--2 { left: calc(50% + 10 * var(--u)); }
+  .footer__vline--3 { left: calc(75% - 5 * var(--u)); }
+
+  /* Колонки: текст на 20 правіше вертикальної лінії (перша — на 40 від краю) */
+  .footer__x-sitemap { left: calc(25% + 45 * var(--u)); }
+  .footer__x-sitemap2 { left: calc(41.67% + 15 * var(--u)); }
+  .footer__x-privacy { left: calc(33.33% + 20 * var(--u)); }
+  .footer__x-social { left: calc(50% + 30 * var(--u)); }
+  .footer__x-contact { left: calc(75% + 15 * var(--u)); }
+
+  .footer__lead { position: absolute; left: var(--gutter); top: calc(42 * var(--u)); line-height: 1.01; }
+  .footer__label { position: absolute; top: calc(42 * var(--u)); color: var(--color-text-muted); }
+  .footer__links { position: absolute; top: calc(80 * var(--u)); white-space: nowrap; }
+  .footer__links li + li { margin-top: var(--gap-10); } /* рядки через 28, як у Figma */
+  /* Посилання: при наведенні пункт стає акцентним червоним, а літери «розшифровуються» випадковими
+     символами, як на кнопках сайту (data-decrypt в animations.js) */
+  .footer__links a,
+  a.footer__small { transition: color 0.3s var(--ease-soft); }
+  .footer__links a:is(:hover, :focus-visible),
+  a.footer__small:is(:hover, :focus-visible) { color: var(--color-accent); }
+
+  /* Підписка — LeadForm variant="newsletter" (поле 380 + квадрат 60, стани як на Syntrex) */
+  .footer__newsletter { position: absolute; left: var(--gutter); top: calc(100 * var(--u)); }
+
+  .footer__up {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-height);
+    height: var(--control-height);
+    border-radius: var(--radius-s);
+    overflow: hidden;
+    transition: background-color 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft);
+  }
+  .footer__arrow {
+    width: calc(25 * var(--u));
+    height: calc(25 * var(--u));
+    -webkit-mask: var(--icon) center / contain no-repeat;
+    mask: var(--icon) center / contain no-repeat;
+    transition: background-color 0.3s var(--ease-soft);
+  }
+  .footer__arrow--up { rotate: -90deg; }
+
+  /* «Наверх»: квадрат з лінією, на 40 від правого краю */
+  .footer__up {
+    position: absolute;
+    right: var(--gutter);
+    top: calc(100 * var(--u));
+    border: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .footer__up .footer__arrow { background: var(--color-text); }
+
+  @media (hover: hover) {
+    .footer__up:hover { background: var(--color-accent); border-color: var(--color-accent); }
+    .footer__up:hover .footer__arrow { background: var(--color-white); animation: footer-arrow-up 0.6s var(--ease-out); }
+  }
+  @keyframes footer-arrow-up {
+    0% { translate: 0 0; opacity: 1; }
+    35% { translate: 0 calc(-30 * var(--u)); opacity: 0; }
+    36% { translate: 0 calc(30 * var(--u)); opacity: 0; }
+    100% { translate: 0 0; opacity: 1; }
+  }
+
+  /* Нижній рядок: на 40 вище нижньої лінії */
+  .footer__copy,
+  .footer__small { position: absolute; top: calc(300 * var(--u)); white-space: nowrap; }
+  .footer__copy { left: var(--gutter); color: var(--color-text-muted); }
+  .footer__credit { right: var(--gutter); }
+
+  /* Великий сірий напис — на 100 нижче ліній, рівно від поля до поля (по 40 з кожного боку), як у Figma.
+     У Figma він набраний PP Neue Montreal 211; наш Inter Tight ширший, тому розмір підбирає data-fit-text
+     (animations.js) під ширину між полями. 211 × --u — лише запасний розмір до підбору. */
+  .footer__mark {
+    margin-top: calc(100 * var(--u));
+    padding: 0 var(--gutter);
+    white-space: nowrap;
+    font-size: calc(211.373 * var(--u));
+    line-height: 1;
+    color: var(--color-wordmark);
+  }
+  .footer__mark span { position: relative; display: inline-block; }
+
+  /* Мобільна і планшет (Figma: mobile 457:202, 10 section; макет 390). Секції одна під одною, між ними
+     пунктир на всю ширину; у кожній: сірий підпис на 20 від лінії, посилання на 20 нижче через 10, 20 до лінії.
+     Підписка: текст, на 20 нижче поле 350 × 60. Мапа сайту — дві колонки (друга з 180). Останній рядок:
+     «Website by …» і квадрат 35 «наверх»; на 50 нижче — великий сірий напис на всю ширину */
+  @media (max-width: 1023px) {
+    .footer__top {
+      display: grid;
+      grid-template-columns: calc(180 * var(--u)) 1fr;
+      align-items: start;
+      height: auto;
+      padding: 0 var(--gutter);
+      border-bottom: 0;
+    }
+    .footer__top::before,
+    .footer__vline { display: none; }
+    .footer__top > * { position: static; grid-column: 1 / -1; }
+
+    .footer__lead { padding-top: var(--gap-20); }
+    .footer__newsletter { margin-top: var(--gap-20); }
+
+    /* Підпис секції з лінією зверху на всю ширину екрана */
+    .footer__label,
+    .footer__copy {
+      margin: var(--gap-20) calc(-1 * var(--gutter)) 0;
+      padding: var(--gap-20) var(--gutter) 0;
+      border-top: 1px var(--line-style) var(--color-silver-gray);
+    }
+    .footer__links { margin-top: var(--gap-20); }
+    .footer__top > .footer__x-sitemap:not(.footer__label):not(.footer__small) { grid-column: 1; }
+    .footer__top > .footer__x-sitemap2 { grid-column: 2; }
+
+    /* Нижні посилання (Terms, Privacy, права) — у колонку через 10, перше на 20 нижче «©» */
+    .footer__small { white-space: nowrap; }
+    .footer__top > a.footer__small.footer__x-sitemap { margin-top: var(--gap-20); }
+    .footer__x-privacy,
+    span.footer__small.footer__x-social { margin-top: var(--gap-10); }
+    /* Лінія під «All rights reserved» — над останнім рядком */
+    span.footer__small.footer__x-social {
+      margin-left: calc(-1 * var(--gutter));
+      margin-right: calc(-1 * var(--gutter));
+      padding: 0 var(--gutter) var(--gap-20);
+      border-bottom: 1px var(--line-style) var(--color-silver-gray);
+    }
+    .footer__top > .footer__credit { grid-column: 1; grid-row: 99; align-self: center; margin-top: var(--gap-20); }
+    .footer__top > .footer__up {
+      grid-column: 2;
+      grid-row: 99;
+      justify-self: end;
+      width: calc(35 * var(--u));
+      height: calc(35 * var(--u));
+      margin-top: var(--gap-20);
+    }
+    .footer__up .footer__arrow { width: calc(18.229 * var(--u)); height: calc(18.229 * var(--u)); }
+
+    .footer__mark { margin-top: calc(50 * var(--u)); padding-bottom: var(--gap-20); }
+  }
+
+</style>

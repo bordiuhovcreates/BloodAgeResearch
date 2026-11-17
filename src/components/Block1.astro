@@ -1,0 +1,210 @@
+---
+// Блок 1 — перший екран (Figma: 383:310). Висота — 100svh.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { hero } = home;
+const { news } = hero;
+---
+<section class="block1" id="block-1">
+  <div class="block1__top">
+    <div class="block1__heading">
+      <p class="block1__brand" data-anim="fade">{hero.brand}</p>
+      <h1 class="block1__title t-h1" data-anim="fade-up">{hero.title}</h1>
+    </div>
+    <p class="block1__location" data-anim="fade">{hero.location}</p>
+    <p class="block1__subtitle" data-anim="fade-up">{hero.subtitle}</p>
+    <button class="block1__button btn-split" type="button" data-anim="fade-up" data-popup-open="Перший екран">
+      <span class="btn-split__bridge" aria-hidden="true"></span>
+      <span class="btn-split__main"><span data-decrypt>{hero.button}</span></span>
+      <span class="btn-split__arrow" aria-hidden="true">
+        <img class="btn-split__icon" src={url('icons/arrow-right.svg')} alt="" width="25" height="25" />
+      </span>
+    </button>
+  </div>
+
+  <div class="block1__media">
+    {hero.video && (
+      <video
+        class="block1__video"
+        poster={url(hero.poster)}
+        width="1680"
+        height="720"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+        data-bg-video
+      >
+        {/* AV1 — легший; браузери без AV1 беруть H.264 */}
+        {hero.videoAv1 && <source src={url(hero.videoAv1)} type='video/mp4; codecs="av01.0.08M.08"' />}
+        <source src={url(hero.video)} type="video/mp4" />
+      </video>
+    )}
+    <p class="block1__scroll">{hero.scrollLabel} <span data-scroll-progress>0%</span></p>
+
+    <a class="block1__news" href={url(news.link)} data-anim="fade-up">
+      {news.image && (
+        <span class="block1__news-media"><img class="block1__news-image" src={url(news.image)} alt="" width="150" height="150" /></span>
+      )}
+      <div class="block1__news-body">
+        <p>{news.label}</p>
+        <div class="block1__news-bottom">
+          <p>{news.title}</p>
+          <p class="block1__news-caption">{news.subtitle}</p>
+        </div>
+      </div>
+      <img class="block1__news-arrow" src={url('icons/arrow-up-right.svg')} alt="" width="15" height="15" />
+    </a>
+  </div>
+</section>
+
+<style>
+  /* Усі розміри — у px макета 1920, помножені на --u (див. variables.css) */
+  .block1 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: max(100svh, calc(760 * var(--u))); /* 100svh; на дуже низькому екрані — не нижче 760 макета, щоб картка не наїхала на текст */
+    overflow: hidden;
+  }
+
+  /* Верхня частина: заголовок, кнопка, опис */
+  .block1__top {
+    display: grid;
+    gap: var(--gap-20);
+    padding: var(--gutter);
+  }
+  .block1__heading { position: relative; }
+  .block1__brand { color: var(--color-accent); }
+  .block1__title { white-space: pre-line; } /* перенос рядка з тексту, як у Figma */
+
+  /* Нижня частина: зациклене відео на всю висоту, що лишилась до 100svh */
+  .block1__media {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .block1__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* «SCROLL 0%» — компактна плашка, закріплена в лівому нижньому куті екрана на всьому сайті (як на минулій версії):
+     темна напівпрозора з розмиттям фону; відсоток — від усієї сторінки (data-scroll-progress) */
+  .block1__scroll {
+    position: fixed;
+    left: var(--gutter);
+    bottom: var(--gap-40);
+    z-index: 10;
+    padding: calc(4 * var(--u)) calc(8 * var(--u));
+    border-radius: calc(4 * var(--u));
+    font-size: var(--badge-size);
+    line-height: 1;
+    color: var(--color-white);
+    background: var(--color-badge-bg);
+    -webkit-backdrop-filter: blur(calc(12 * var(--u)));
+    backdrop-filter: blur(calc(12 * var(--u)));
+    pointer-events: none;
+  }
+
+  /* Картка публікації 445×180 */
+  .block1__news {
+    position: absolute;
+    right: var(--gutter);
+    bottom: var(--gap-40);
+    display: flex;
+    gap: var(--gap-15);
+    width: calc(445 * var(--u));
+    padding: var(--gap-15);
+    border-radius: var(--radius-m);
+    background: var(--color-white);
+  }
+  /* Фото в рамці 150 (як на Syntrex): при наведенні на саме фото плавно збільшується всередині рамки */
+  .block1__news-media {
+    flex: none;
+    display: block;
+    width: calc(150 * var(--u));
+    height: calc(150 * var(--u));
+    border-radius: var(--radius-s);
+    overflow: hidden;
+  }
+  .block1__news-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-hover) var(--ease);
+  }
+  .block1__news-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .block1__news-bottom { display: grid; gap: var(--gap-12); }
+  .block1__news-caption { font-size: var(--caption-size); color: var(--color-text-muted); }
+  .block1__news-arrow {
+    position: absolute;
+    top: var(--gap-15);
+    right: var(--gap-15);
+    width: calc(15 * var(--u));
+    height: calc(15 * var(--u));
+  }
+  @media (hover: hover) {
+    .block1__news-media:hover .block1__news-image { transform: scale(1.08); } /* лише при наведенні на саме фото */
+    /* Стрілка ↗ вилітає по діагоналі вгору-вправо і повертається знизу-зліва — при наведенні на картку */
+    .block1__news:hover .block1__news-arrow { animation: block1-arrow-diag var(--duration-hover) var(--ease-out); }
+  }
+  @keyframes block1-arrow-diag {
+    0% { transform: translate(0, 0); opacity: 1; }
+    35% { transform: translate(calc(15 * var(--u)), calc(-15 * var(--u))); opacity: 0; }
+    36% { transform: translate(calc(-15 * var(--u)), calc(15 * var(--u))); opacity: 0; }
+    100% { transform: translate(0, 0); opacity: 1; }
+  }
+
+  /* Мобільна і планшет (Figma: mobile 396:2017, 1 section; макет 390): висота за вмістом.
+     Назва на 31 від верху (по центру кнопки меню 35), заголовок 40 на 50 нижче, далі опис і кнопка через 20,
+     відео на всю ширину (висота 196.875) на 30 нижче кнопки. Місто й картка публікації на мобільній не показуються */
+  @media (max-width: 1023px) {
+    .block1 { height: auto; }
+    .block1__top { padding: calc(31 * var(--u)) var(--gutter) 0; }
+    .block1__heading { display: grid; row-gap: calc(50 * var(--u)); }
+    .block1__title { text-wrap: balance; } /* «…Biological Signals / In Your Blood», як у Figma */
+    .block1__subtitle { white-space: pre-line; } /* 5 рядків — переноси з тексту, як у Figma */
+    .block1__location,
+    .block1__news { display: none; }
+    .block1__button .btn-split__icon { width: var(--gap-20); height: var(--gap-20); }
+    /* Відео на всю ширину екрана, без скруглення — як на десктопі; висота як у Figma */
+    .block1__media {
+      flex: none;
+      margin-top: calc(30 * var(--u));
+      height: calc(196.875 * var(--u));
+    }
+  }
+
+  /* Десктоп (макет 1920): колонки 910 / 485 / 445 */
+  @media (min-width: 1024px) {
+    .block1__top {
+      grid-template-columns: 910fr 485fr 445fr;
+      row-gap: var(--gap-40);
+      column-gap: 0;
+    }
+    .block1__heading { grid-column: 1 / 3; grid-row: 1; }
+    .block1__brand { position: absolute; top: var(--gap-10); left: 0; }
+    .block1__title { max-width: calc(1220 * var(--u)); text-indent: calc(320 * var(--u)); }
+    .block1__location { grid-column: 3; grid-row: 1; align-self: start; padding-top: var(--gap-10); }
+    .block1__subtitle {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      align-self: end;
+      width: calc(443 * var(--u));
+      margin-bottom: var(--gap-20);
+      white-space: pre; /* рядки — точно як у тексті (переноси з Figma) */
+    }
+    .block1__button { grid-column: 1; grid-row: 2; }
+  }
+</style>

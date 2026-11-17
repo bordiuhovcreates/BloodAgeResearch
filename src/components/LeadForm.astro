@@ -1,0 +1,437 @@
+---
+// Форма заявки. Надсилає дані в Google Apps Script, звідти — у Google-таблицю.
+// Адреса скрипта: FORM_ENDPOINT у файлі site.config.mjs.
+//
+// variant="newsletter" — підписка в підвалі (як на Syntrex): лише e-mail. Кнопка неактивна, поки адреса
+// неправильна; червона рамка, якщо людина вийшла з поля з помилкою; після надсилання — подяка під полем.
+// Надсилається як service: "Newsletter" (Code.gs записує її на окремий лист «Підписки»).
+import { FORM_ENDPOINT } from '../../site.config.mjs';
+import { url } from '../lib/url';
+
+interface NewsletterTexts { placeholder: string; button: string; sending: string; success: string; error: string }
+interface PanelTexts {
+  nameLabel: string; namePlaceholder: string; emailLabel: string; emailPlaceholder: string;
+  phoneLabel: string; phonePlaceholder: string; error: string;
+  success: string;
+}
+interface Props {
+  service?: string; // назва форми в заявці: «Контакти», «Попап»…
+  button?: string;
+  variant?: 'default' | 'newsletter' | 'panel';
+  texts?: NewsletterTexts | PanelTexts;
+}
+const { service = 'Контакти', button = 'Надіслати заявку', variant = 'default', texts } = Astro.props;
+const news = variant === 'newsletter' && texts ? (texts as NewsletterTexts) : null;
+const panel = variant === 'panel' && texts ? (texts as PanelTexts) : null;
+---
+{panel ? (
+  <>
+  <form
+    class="lead-form lead-form--panel"
+    data-panel-form
+    data-endpoint={FORM_ENDPOINT}
+    data-error={panel.error}
+    novalidate
+  >
+    <label class="lead-form__pfield">
+      <span class="lead-form__plabel">{panel.nameLabel}</span>
+      <input type="text" name="name" placeholder={panel.namePlaceholder} autocomplete="name" required />
+    </label>
+    <label class="lead-form__pfield">
+      <span class="lead-form__plabel">{panel.emailLabel}</span>
+      <input type="email" name="email" placeholder={panel.emailPlaceholder} autocomplete="email" inputmode="email" required data-check="email" />
+    </label>
+    <label class="lead-form__pfield lead-form__pfield--wide">
+      <span class="lead-form__plabel">{panel.phoneLabel}</span>
+      <input type="tel" name="phone" placeholder={panel.phonePlaceholder} autocomplete="tel" inputmode="tel" required data-check="phone" />
+    </label>
+    <input type="hidden" name="service" value={service} />
+    <!-- Поле-пастка від спаму: людина його не бачить -->
+    <input type="text" name="website" class="lead-form__trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <p class="lead-form__perror" role="alert" hidden></p>
+    <button type="submit" class="lead-form__psubmit btn-split" disabled>
+      <span class="btn-split__bridge" aria-hidden="true"></span>
+      <span class="btn-split__main"><span data-decrypt>{button}</span></span>
+      <span class="btn-split__arrow" aria-hidden="true">
+        <img class="btn-split__icon lead-form__picon" src={url('icons/arrow-right.svg')} alt="" width="20" height="20" />
+      </span>
+    </button>
+  </form>
+  <!-- Подяка після надсилання (Figma: pc form partner, 444:99): з'являється на місці форми -->
+  <div class="lead-form__thanks" role="status" hidden>
+    <p class="lead-form__thanks-text t-h3">{panel.success}</p>
+  </div>
+  </>
+) : news ? (
+  <form
+    class="lead-form lead-form--newsletter"
+    data-newsletter-form
+    data-endpoint={FORM_ENDPOINT}
+    data-success={news.success}
+    data-error={news.error}
+    novalidate
+  >
+    <label class="lead-form__news-field">
+      <span class="visually-hidden">{news.placeholder}</span>
+      <input type="email" name="email" placeholder={news.placeholder} autocomplete="email" inputmode="email" required />
+    </label>
+    <input type="hidden" name="service" value="Newsletter" />
+    <!-- Поле-пастка від спаму: людина його не бачить -->
+    <input type="text" name="website" class="lead-form__trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <button type="submit" class="lead-form__news-submit" aria-label={news.button} disabled>
+      <img src={url('icons/arrow-right.svg')} alt="" width="25" height="25" />
+    </button>
+    <p class="lead-form__news-msg" role="status" hidden></p>
+  </form>
+) : (
+  <form class="lead-form" data-lead-form data-endpoint={FORM_ENDPOINT} data-thanks={url('thanks/')} novalidate>
+    <label class="lead-form__field">
+      <span class="visually-hidden">Ім'я</span>
+      <input type="text" name="name" placeholder="Ваше ім'я" autocomplete="name" required />
+    </label>
+    <label class="lead-form__field">
+      <span class="visually-hidden">Телефон</span>
+      <input type="tel" name="phone" placeholder="+380" autocomplete="tel" inputmode="tel" required />
+    </label>
+    <input type="hidden" name="service" value={service} />
+    <!-- Поле-пастка від спаму: людина його не бачить -->
+    <input type="text" name="website" class="lead-form__trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <button type="submit" class="btn">{button}</button>
+    <p class="lead-form__error" role="alert" hidden></p>
+  </form>
+)}
+
+<style>
+  .lead-form { display: grid; gap: var(--space-2); }
+  .lead-form input:not([type='hidden']) {
+    width: 100%; min-height: 56px; padding: 0 var(--space-3);
+    border: 1px solid var(--color-border); border-radius: var(--radius-m); background: var(--color-bg);
+  }
+  .lead-form input:focus { outline: none; border-color: var(--color-black); }
+  .lead-form input[aria-invalid='true'] { border-color: #e5484d; }
+  .lead-form__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .lead-form__error { color: #e5484d; font-size: var(--caption-size); }
+  .lead-form button[disabled] { opacity: 0.6; pointer-events: none; }
+
+  /* ---------- Форма в панелі (Figma: pc form patient / partner): ім'я і e-mail поруч, телефон на всю ширину,
+     підпис на 20 над полем, ряди через 40, кнопка 60 на всю ширину ---------- */
+  .lead-form--panel {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap-40) var(--gap-20);
+  }
+  .lead-form__pfield { display: grid; gap: var(--gap-20); }
+  .lead-form__pfield--wide,
+  .lead-form__perror,
+  .lead-form__psubmit { grid-column: 1 / -1; }
+  .lead-form--panel input:not([type='hidden']) {
+    height: var(--control-height);
+    min-height: 0;
+    padding: 0 var(--gap-20);
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-s);
+    background: transparent;
+    color: var(--color-text);
+    line-height: 1;
+    transition: border-color 0.3s var(--ease-soft);
+  }
+  .lead-form--panel input:focus { border-color: var(--color-text); }
+  .lead-form--panel input[aria-invalid='true'] { border-color: var(--color-accent); }
+  .lead-form--panel ::placeholder { color: var(--color-text-muted); opacity: 1; }
+  .lead-form--panel input:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-text);
+    box-shadow: 0 0 0 100vmax var(--color-panel) inset;
+  }
+  .lead-form__perror { color: var(--color-accent); }
+  .lead-form__picon { width: calc(20 * var(--u)); height: calc(20 * var(--u)); }
+  /* Неактивна, поки поля заповнені неправильно */
+  .lead-form--panel .lead-form__psubmit[disabled] { opacity: 0.5; pointer-events: none; }
+  /* Поки заявка йде — кнопка напівпрозора і не натискається */
+  .lead-form--panel.is-sending .lead-form__psubmit { opacity: 0.5; pointer-events: none; }
+
+  /* Подяка (Figma 444:146): пунктирна рамка 880×336 внизу панелі, текст 28 по центру */
+  .lead-form__thanks {
+    display: grid;
+    place-content: center;
+    height: calc(336 * var(--u));
+    padding: 0 var(--gap-20);
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-xs);
+    text-align: center;
+    animation: lead-thanks-in 0.6s var(--ease-soft) both;
+  }
+  /* hidden сильніший за display: grid — інакше форма лишається під подякою */
+  .lead-form[hidden],
+  .lead-form__thanks[hidden] { display: none; }
+  .lead-form__thanks-text { color: var(--color-text); opacity: 0.9; text-wrap: balance; }
+  @keyframes lead-thanks-in {
+    from { opacity: 0; translate: 0 var(--gap-20); }
+    to { opacity: 1; translate: 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lead-form__thanks { animation: none; } }
+  /* Надіслано (is-sent): на десктопі форма ховається, на її місці — подяка */
+  .lead-form--panel.is-sent { display: none; }
+
+  /* Форма в панелі — мобільна і планшет (Figma: mobile form patient 411:26, partner 414:261, подяка 455:175).
+     Поля в колонку: підпис 18, поле 60 на 15 нижче (скруглення 3, підказка — чорний 40%), між полями 20,
+     кнопка на 20 нижче. Після надсилання поля зникають, лишається кнопка, а над нею — рамка подяки 350 × 319
+     (текст 20 по центру) на 20 вище кнопки */
+  @media (max-width: 1023px) {
+    .lead-form--panel { grid-template-columns: 1fr; row-gap: var(--gap-20); }
+    .lead-form__pfield { gap: var(--gap-15); font-size: var(--text-18-size); }
+    .lead-form--panel input:not([type='hidden']) { border-radius: var(--radius-xs); font-size: var(--text-18-size); }
+    .lead-form--panel ::placeholder { color: var(--color-placeholder); }
+    .lead-form--panel.is-sent { display: grid; }
+    .lead-form--panel.is-sent .lead-form__pfield,
+    .lead-form--panel.is-sent .lead-form__perror { display: none; }
+    .lead-form--panel.is-sent .lead-form__psubmit[disabled] { opacity: 1; }
+    .lead-form__thanks { order: -1; height: calc(319 * var(--u)); margin-bottom: var(--gap-20); }
+  }
+
+  /* ---------- Підписка в підвалі (як на Syntrex): поле 380×60 + червоний квадрат 60, зазор 5 ---------- */
+  .lead-form--newsletter {
+    grid-template-columns: calc(380 * var(--u)) var(--control-height);
+    gap: var(--gap-10) calc(5 * var(--u));
+  }
+  .lead-form--newsletter input:not([type='hidden']) {
+    height: var(--control-height);
+    min-height: 0;
+    padding: 0 var(--gap-20);
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-s);
+    background: transparent;
+    color: var(--color-text);
+    line-height: 1.01;
+    transition: border-color 0.3s var(--ease-soft);
+  }
+  .lead-form--newsletter input:focus { border-color: var(--color-text); }
+  /* Вийшли з поля з неправильною адресою — червона рамка */
+  .lead-form--newsletter input[aria-invalid='true'] { border-color: var(--color-accent); }
+  .lead-form--newsletter ::placeholder { color: var(--color-text-muted); opacity: 1; }
+  .lead-form--newsletter input:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-text);
+    box-shadow: 0 0 0 100vmax var(--color-bg) inset;
+  }
+  .lead-form__news-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--control-height);
+    height: var(--control-height);
+    border-radius: var(--radius-s);
+    background: var(--color-accent);
+    overflow: hidden;
+    transition: background-color 0.3s var(--ease-soft), opacity 0.3s var(--ease-soft);
+  }
+  .lead-form__news-submit img { width: calc(25 * var(--u)); height: calc(25 * var(--u)); }
+  /* Неактивна, поки адреса неправильна: напівпрозора і не натискається */
+  .lead-form--newsletter .lead-form__news-submit[disabled] { opacity: 0.5; pointer-events: none; }
+  @media (hover: hover) {
+    .lead-form__news-submit:hover { background: var(--color-text); }
+    .lead-form__news-submit:hover img { animation: lead-arrow-out 0.6s var(--ease-out); }
+  }
+  /* Мобільна і планшет: те саме — поле на всю ширину, що лишилась, + червоний квадрат 60 (зазор 5), стрілка 20 */
+  @media (max-width: 1023px) {
+    .lead-form--newsletter { grid-template-columns: 1fr var(--control-height); }
+    .lead-form__news-submit img { width: var(--gap-20); height: var(--gap-20); }
+  }
+  .lead-form__news-submit:focus-visible { outline: 2px solid var(--color-text); outline-offset: 3px; }
+  @keyframes lead-arrow-out {
+    0% { transform: translateX(0); opacity: 1; }
+    35% { transform: translateX(calc(30 * var(--u))); opacity: 0; }
+    36% { transform: translateX(calc(-30 * var(--u))); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  /* Повідомлення під полем: помилка — сірим, подяка — кольором тексту */
+  .lead-form__news-msg { grid-column: 1 / -1; color: var(--color-text-muted); }
+  .lead-form__news-msg.is-success { color: var(--color-text); }
+</style>
+
+<script>
+  // ---------- Звичайна форма заявки ----------
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-lead-form]');
+
+  forms.forEach((form) => {
+    const error = form.querySelector<HTMLElement>('.lead-form__error')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+
+    const showError = (text: string) => { error.textContent = text; error.hidden = false; };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      const name = (data.name || '').trim();
+      const phone = (data.phone || '').trim();
+
+      form.querySelector('[name="name"]')!.setAttribute('aria-invalid', String(!name));
+      const phoneOk = phone.replace(/\D/g, '').length >= 9;
+      form.querySelector('[name="phone"]')!.setAttribute('aria-invalid', String(!phoneOk));
+      if (!name || !phoneOk) return showError("Вкажіть ім'я і телефон");
+
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        console.warn('FORM_ENDPOINT порожній: вкажіть URL Google Apps Script у site.config.mjs');
+        return showError('Форма ще не підключена');
+      }
+
+      button.disabled = true;
+      try {
+        // text/plain — щоб браузер не блокував запит до Google (CORS)
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ ...data, name, phone }),
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error || 'Помилка');
+        window.location.href = form.dataset.thanks!;
+      } catch (err) {
+        console.error(err);
+        showError('Не вдалося надіслати заявку. Спробуйте ще раз або зателефонуйте нам.');
+        button.disabled = false;
+      }
+    });
+  });
+
+  // ---------- Форма в панелі (variant="panel"): ім'я, e-mail, телефон ----------
+  // Кнопка активна лише коли всі поля правильні; поле з помилкою — червона рамка, коли з нього вийшли.
+  const checks: Record<string, (v: string) => boolean> = {
+    email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+    phone: (v) => /^[\d\s()+-]+$/.test(v) && v.replace(/\D/g, '').length >= 9 && v.replace(/\D/g, '').length <= 15,
+  };
+  document.querySelectorAll<HTMLFormElement>('[data-panel-form]').forEach((form) => {
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const error = form.querySelector<HTMLElement>('.lead-form__perror')!;
+    const fields = [...form.querySelectorAll<HTMLInputElement>('input[required]')];
+    const isOk = (f: HTMLInputElement) => {
+      const v = f.value.trim();
+      if (!v) return false;
+      const check = f.dataset.check && checks[f.dataset.check];
+      return check ? check(v) : true;
+    };
+    const mark = (f: HTMLInputElement) => f.setAttribute('aria-invalid', String(!isOk(f)));
+    const update = () => { button.disabled = !fields.every(isOk); };
+    fields.forEach((f) => {
+      f.addEventListener('input', () => { error.hidden = true; if (f.getAttribute('aria-invalid') === 'true') mark(f); update(); });
+      f.addEventListener('blur', () => { if (f.value.trim() || f.hasAttribute('aria-invalid')) mark(f); });
+    });
+    update();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+      const bad = fields.filter((f) => !isOk(f));
+      bad.forEach(mark);
+      if (bad.length) { bad[0].focus(); return; }
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        console.warn('FORM_ENDPOINT порожній: вкажіть URL Google Apps Script у site.config.mjs');
+        error.textContent = form.dataset.error!;
+        error.hidden = false;
+        return;
+      }
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      Object.keys(data).forEach((k) => { data[k] = String(data[k]).trim(); });
+      form.classList.add('is-sending');
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error || 'Помилка');
+        // Подяка на місці форми
+        if (thanks) {
+          form.classList.add('is-sent'); // десктоп — форму сховано; мобільна — лишається лише кнопка під подякою
+          button.disabled = true;
+          thanks.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+        error.textContent = form.dataset.error!;
+        error.hidden = false;
+      }
+      form.classList.remove('is-sending');
+    });
+
+    // Панель закрилась — після анімації закриття повертаємо порожню форму
+    const thanks = form.nextElementSibling instanceof HTMLElement && form.nextElementSibling.matches('.lead-form__thanks')
+      ? form.nextElementSibling : null;
+    const panelEl = form.closest('[data-panel]');
+    if (thanks && panelEl) {
+      let timer = 0;
+      new MutationObserver(() => {
+        clearTimeout(timer);
+        if (panelEl.classList.contains('is-open') || thanks.hidden) return;
+        timer = window.setTimeout(() => {
+          form.reset();
+          fields.forEach((f) => f.removeAttribute('aria-invalid'));
+          error.hidden = true;
+          thanks.hidden = true;
+          form.classList.remove('is-sent');
+          update();
+        }, 800);
+      }).observe(panelEl, { attributes: true, attributeFilter: ['class'] });
+    }
+  });
+
+  // ---------- Підписка (variant="newsletter") ----------
+  const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]').forEach((form) => {
+    const input = form.querySelector<HTMLInputElement>('input[name="email"]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const msg = form.querySelector<HTMLElement>('.lead-form__news-msg')!;
+
+    const ok = () => isEmail(input.value.trim());
+    // Кнопка активна лише з правильною адресою
+    const update = () => { button.disabled = !ok(); };
+    const mark = () => input.setAttribute('aria-invalid', String(!ok()));
+    const show = (text: string, success = false) => {
+      msg.textContent = text;
+      msg.classList.toggle('is-success', success);
+      msg.hidden = false;
+    };
+
+    input.addEventListener('input', () => {
+      msg.hidden = true;
+      if (input.getAttribute('aria-invalid') === 'true') mark();
+      update();
+    });
+    // Підсвічуємо помилку, коли людина вийшла з поля, яке вже почала заповнювати
+    input.addEventListener('blur', () => { if (input.value.trim() || input.hasAttribute('aria-invalid')) mark(); });
+    update();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!ok()) { mark(); input.focus(); return; }
+
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        console.warn('FORM_ENDPOINT порожній: вкажіть URL Google Apps Script у site.config.mjs');
+        return show(form.dataset.error!);
+      }
+
+      const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+      button.disabled = true;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ ...data, email: input.value.trim() }),
+        });
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error || 'Помилка');
+        form.reset();
+        input.removeAttribute('aria-invalid');
+        show(form.dataset.success!, true);
+      } catch (err) {
+        console.error(err);
+        show(form.dataset.error!);
+      }
+      update();
+    });
+  });
+</script>

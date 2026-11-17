@@ -1,0 +1,187 @@
+---
+// Блок 6 — ключові дослідники (Figma: 383:29). Таблиця: фото обраного дослідника «прилипає», поки
+// прокручується список; рядок під курсором лишається яскравим, інші бліднуть, а його фото
+// виїжджає знизу (рух вниз по списку) або згори (вгору) — data-hover-gallery в animations.js.
+// Розміри — px макета 1920 × --u. Колонки: фото 445 | 20 | 155 | ім'я 465 | посада 465 | напрям (решта).
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { team } = home;
+
+const srcset = (src: string) =>
+  /-445\.webp$/.test(src) ? `${url(src)} 445w, ${url(src.replace(/-445\.webp$/, '-890.webp'))} 890w` : undefined;
+---
+<section class="block6" id="block-6">
+  <p class="block6__label">{team.label}</p>
+  <h2 class="block6__title t-h2">
+    {team.title}<br /><span class="block6__accent">{team.titleAccent}</span>
+  </h2>
+
+  <div class="block6__table">
+    <div class="block6__head">
+      <span class="block6__h block6__h--photo">{team.headPhoto}</span>
+      <span class="block6__h block6__h--name">{team.headName}</span>
+      <span class="block6__h block6__h--position">{team.headPosition}</span>
+      <span class="block6__h block6__h--focus">{team.headFocus}</span>
+    </div>
+
+    <div class="block6__body" data-hover-gallery>
+      <div class="block6__media">
+        <div class="block6__photo">
+          {team.people.map((p) => (
+            <img
+              class="block6__img"
+              src={url(p.photo)}
+              srcset={srcset(p.photo)}
+              sizes="23vw"
+              alt={p.name}
+              width="445"
+              height="445"
+              loading="lazy"
+              decoding="async"
+              data-gallery-img
+            />
+          ))}
+        </div>
+      </div>
+      <ul class="block6__list" role="list">
+        {team.people.map((p) => (
+          <li class="block6__row" data-gallery-item>
+            <span>{p.name}</span>
+            <span>{p.position}</span>
+            <span>{p.focus}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 250 від Блоку 5; підпис → заголовок 30; заголовок → таблиця 100 (як у макеті) */
+  .block6 { margin-top: var(--section-gap); padding: 0 var(--gutter); }
+  .block6__label { text-align: center; color: var(--color-accent); }
+  .block6__title { max-width: calc(1098 * var(--u)); margin: calc(30 * var(--u)) auto 0; text-align: center; }
+  .block6__accent { color: var(--color-accent); }
+
+  .block6__table {
+    --cols: calc(445 * var(--u)) calc(20 * var(--u)) calc(155 * var(--u)) calc(465 * var(--u)) calc(465 * var(--u)) 1fr;
+    margin-top: calc(100 * var(--u));
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+  }
+
+  /* Шапка таблиці: підписи на 40 нижче лінії, рядок 98 */
+  .block6__head {
+    display: grid;
+    grid-template-columns: var(--cols);
+    height: calc(98 * var(--u) - 1px);
+    padding-top: calc(40 * var(--u) - 1px);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+  .block6__h--photo { grid-column: 1; }
+  .block6__h--name { grid-column: 4; }
+  .block6__h--position { grid-column: 5; }
+  .block6__h--focus { grid-column: 6; }
+
+  .block6__body {
+    display: grid;
+    grid-template-columns: calc(445 * var(--u)) 1fr;
+    column-gap: calc(20 * var(--u));
+    align-items: stretch;
+  }
+
+  /* Колонка фото — на всю висоту списку: фото їде за прокруткою (80 від верху екрана)
+     і зупиняється, коли його низ доходить до нижньої лінії останнього рядка */
+  .block6__media { position: relative; height: 100%; }
+
+  /* Фото 445×445 прилипає, поки список прокручується; нове виїжджає й виштовхує старе (animations.js) */
+  .block6__photo {
+    position: sticky;
+    top: calc(80 * var(--u));
+    height: calc(445 * var(--u));
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    background: var(--color-soft);
+  }
+  .block6__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    transform: translateY(101%); /* 101 — без смужки на дробових пікселях */
+  }
+
+  .block6__list { border-top: 1px var(--line-style) var(--color-silver-gray); }
+  /* Рядок 98: текст на 40 нижче лінії; колонки ім'я / посада / напрям — як у шапці */
+  .block6__row {
+    display: grid;
+    grid-template-columns: calc(465 * var(--u)) calc(465 * var(--u)) 1fr;
+    height: calc(98 * var(--u));
+    padding: calc(40 * var(--u) - 1px) 0 0 calc(155 * var(--u));
+    border-bottom: 1px var(--line-style) var(--color-silver-gray);
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  /* Курсор над рядком — інші бліднуть до 0.5 (поза списком усі яскраві) */
+  @media (hover: hover) {
+    .block6__list:has(.block6__row:hover) .block6__row:not(:hover) { opacity: 0.5; }
+  }
+
+  /* Мобільна і планшет (Figma: mobile 407:3167, 6 section; макет 390). Підпис, заголовок 36 у 4 рядки;
+     на 50 нижче — «Selected Researcher», лінія, шапка Name / Position (колонка 180), рядки по 54 з пунктиром.
+     Поведінка як на revelatio.studio: яскравий (чорний) рядок — той, що проходить центр екрана, інші сірі;
+     фото 170 їде за ним (на 44 нижче верху рядка, 90 від лівого краю) — animations.js, --gallery-y */
+  @media (max-width: 1023px) {
+    .block6__title { max-width: none; margin-top: var(--gap-20); }
+    .block6__table {
+      --cols-m: calc(180 * var(--u)) 1fr;
+      margin-top: calc(50 * var(--u));
+      border-top: 0;
+    }
+    .block6__head {
+      grid-template-columns: var(--cols-m);
+      height: auto;
+      padding: 0;
+    }
+    .block6__h--photo {
+      grid-column: 1 / -1;
+      padding-bottom: var(--gap-20);
+      border-bottom: 1px var(--line-style) var(--color-silver-gray);
+    }
+    .block6__h--name,
+    .block6__h--position { grid-column: auto; padding: var(--gap-20) 0; }
+    .block6__h--focus { display: none; }
+
+    .block6__body { position: relative; display: block; }
+    .block6__media {
+      position: absolute;
+      inset: 0;
+      height: auto;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .block6__photo {
+      position: absolute;
+      left: calc(90 * var(--u));
+      /* не нижче за кінець списку — інакше в останніх рядках фото налазить на наступний блок */
+      top: min(calc(var(--gallery-y, 0px) + 44 * var(--u)), calc(100% - 170 * var(--u)));
+      width: calc(170 * var(--u));
+      height: calc(170 * var(--u));
+      border-radius: var(--radius-photo-s); /* рух — плавне «доганяння» в animations.js, без CSS-переходу */
+    }
+
+    .block6__row {
+      grid-template-columns: var(--cols-m);
+      height: calc(54 * var(--u));
+      padding: var(--gap-20) 0 0;
+      color: var(--color-text-muted);
+      transition: color 0.35s var(--ease-soft);
+    }
+    .block6__row:last-child { border-bottom: 0; }
+    .block6__row > :nth-child(3) { display: none; }
+    .block6__row.is-active { color: var(--color-text); }
+    .block6__list:has(.block6__row:hover) .block6__row:not(:hover) { opacity: 1; }
+  }
+</style>

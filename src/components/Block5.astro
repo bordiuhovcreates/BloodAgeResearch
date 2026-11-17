@@ -1,0 +1,279 @@
+---
+// Блок 5 — напрями досліджень (Figma: 383:102). Рамка 1007 між двома лініями прилипає по центру екрана,
+// поки прокручується доріжка: центральна лінія заповнюється червоним (--p), шість напрямів
+// по черзі стають активними, фото ліворуч змінюється (data-scroll-steps в animations.js).
+// Розміри — px макета 1920 × --u.
+import home from '../content/home.json';
+import { url } from '../lib/url';
+const { areas } = home;
+
+// srcset, якщо фото з набору area-N-<ширина>.webp
+const srcset = (src: string) =>
+  /-\d+\.webp$/.test(src) && /area-\d+-/.test(src)
+    ? [880, 1320, 1760].map((w) => `${url(src.replace(/\d+\.webp$/, `${w}.webp`))} ${w}w`).join(', ')
+    : undefined;
+---
+<section class="block5" id="block-5">
+  <p class="block5__label">{areas.label}</p>
+  <h2 class="block5__title t-h2">{areas.title}</h2>
+
+  <div class="block5__track" data-scroll-steps="desktop">
+    <div class="block5__frame">
+      <div class="block5__media">
+        {areas.items.map((item, i) => (
+          <img
+            class:list={['block5__img', { 'is-active': i === 0 }]}
+            src={url(item.image)}
+            srcset={srcset(item.image)}
+            sizes="46vw"
+            alt=""
+            width="880"
+            height="926"
+            loading="lazy"
+            decoding="async"
+            data-step={i}
+          />
+        ))}
+      </div>
+      <span class="block5__line" aria-hidden="true"></span>
+      <span class="block5__line block5__line--fill" aria-hidden="true"></span>
+
+      <div class="block5__side">
+        <div class="block5__head">
+          <p class="block5__lead">{areas.lead}</p>
+          <span class="block5__tag">{areas.tag}</span>
+        </div>
+        <div class="block5__list">
+          {areas.items.map((item, i) => (
+            <>
+              {i > 0 && <span class="block5__sep" aria-hidden="true"></span>}
+              <div class:list={['block5__area', { 'is-active': i === 0 }]} data-step={i}>
+                {/* Мобільна: вступ угорі відкритої картки */}
+                <p class="block5__mlead">{areas.lead}</p>
+                <div class="block5__row">
+                  <span class="block5__num">{i + 1}</span>
+                  <h3 class="block5__name">{item.title}</h3>
+                  <span class="block5__dot" aria-hidden="true"></span>
+                </div>
+                <div class="block5__body"><p class="block5__text">{item.text}</p></div>
+                {/* Мобільна: фото напряму в його картці */}
+                <img class="block5__mimg" src={url(item.image)} srcset={srcset(item.image)} sizes="80vw" alt="" width="880" height="508" loading="lazy" decoding="async" />
+              </div>
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 250 від Блоку 4; підпис → заголовок 32; заголовок → рамка 100 (як у макеті) */
+  .block5 { margin-top: var(--section-gap); }
+  .block5__label { text-align: center; color: var(--color-accent); }
+  .block5__title { margin-top: calc(32 * var(--u)); text-align: center; }
+
+  /* Доріжка дає прокрутку для шести напрямів (рамка + 3.6 екрана).
+     Рамка 1007 (як у Figma) прилипає по центру екрана */
+  .block5 { --frame-h: min(calc(1007 * var(--u)), 100svh); } /* на низькому екрані рамка = екран, стискаються проміжки між напрямами */
+  .block5__track { margin-top: calc(100 * var(--u)); height: calc(var(--frame-h) + 360svh); }
+  .block5__frame {
+    position: sticky;
+    top: calc((100svh - var(--frame-h)) / 2);
+    height: var(--frame-h);
+    overflow: hidden;
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+    border-bottom: 1px var(--line-style) var(--color-silver-gray);
+  }
+
+  /* Фото активного напряму проявляється поверх попереднього (на чорному, як у Figma) */
+  .block5__media {
+    position: absolute;
+    left: var(--gutter);
+    top: var(--gap-40);
+    bottom: calc(41 * var(--u));
+    width: calc(50% - 80 * var(--u)); /* ліва половина з полями 40 */
+    border-radius: var(--radius-m);
+    overflow: hidden;
+    background: var(--color-black);
+  }
+  .block5__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s var(--ease-soft);
+  }
+  .block5__img.was-active { opacity: 1; z-index: 1; }
+  .block5__img.is-active { opacity: 1; z-index: 2; }
+
+  /* Центральна лінія; її червона копія відкривається згори разом із прокруткою */
+  .block5__line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    border-left: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .block5__line--fill {
+    border-left-color: var(--color-accent);
+    clip-path: inset(0 0 calc(100% - var(--p, 0) * 100%) 0);
+  }
+
+  .block5__side { position: absolute; left: 50%; right: 0; top: 0; bottom: 0; display: flex; flex-direction: column; }
+  .block5__head { position: relative; flex: none; height: calc(154 * var(--u)); }
+  .block5__head::after {
+    content: '';
+    position: absolute;
+    left: 1px;
+    right: 0;
+    bottom: 0;
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+  }
+  .block5__lead {
+    position: absolute;
+    left: var(--gap-40);
+    top: var(--gap-40);
+    width: calc(420 * var(--u));
+    color: var(--color-text-muted);
+  }
+  .block5__tag { position: absolute; right: var(--gutter); top: var(--gap-40); white-space: nowrap; }
+
+  /* Вільна висота рівномірно йде в проміжки між напрямами (по 80 на рамці 1007 у Figma) */
+  .block5__list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: var(--gap-40) 0 calc(41 * var(--u));
+  }
+  .block5__sep { position: relative; flex: 1 1 0; min-height: var(--gap-20); }
+  .block5__sep::before {
+    content: '';
+    position: absolute;
+    left: 1px;
+    right: 0;
+    top: 50%;
+    border-top: 1px var(--line-style) var(--color-silver-gray);
+  }
+
+  .block5__area { position: relative; flex: none; padding-left: var(--gap-40); }
+  .block5__row { display: flex; align-items: center; height: calc(48 * var(--u)); }
+  .block5__num {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(48 * var(--u));
+    height: calc(48 * var(--u));
+    border: 1px var(--line-style) var(--color-silver-gray);
+    border-radius: var(--radius-s);
+    color: var(--color-text);
+    transition: background-color 0.5s var(--ease-soft), border-color 0.5s var(--ease-soft), color 0.5s var(--ease-soft);
+  }
+  .block5__name {
+    margin-left: var(--gap-20);
+    font-size: var(--h3-size);
+    line-height: var(--h3-lh);
+    color: var(--color-text);
+  }
+  .block5__dot {
+    position: absolute;
+    right: var(--gutter);
+    top: calc(19 * var(--u));
+    width: var(--gap-10);
+    height: var(--gap-10);
+    border-radius: 50%;
+    background: var(--color-silver-gray);
+    transition: background-color 0.5s var(--ease-soft), transform 0.4s var(--ease-out);
+  }
+  .block5__dot::before { content: ''; position: absolute; inset: calc(-1 * var(--gap-10)); }
+  .block5__dot:hover { transform: scale(1.5); }
+
+  /* Текст видно лише в активного напряму: рядок плавно розкривається, попередній закривається */
+  .block5__body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.6s var(--ease-soft); }
+  .block5__text {
+    min-height: 0;
+    overflow: hidden;
+    white-space: pre; /* завжди 3 рядки — переноси з тексту */
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-soft);
+  }
+  .block5__text::before { content: ''; display: block; height: calc(30 * var(--u)); }
+
+  /* Активний (як у Figma): червоний квадрат з білою цифрою, червона точка; назва чорна, як і в неактивних */
+  .block5__area.is-active .block5__num {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-white);
+  }
+  .block5__area.is-active .block5__dot { background: var(--color-accent); }
+  .block5__area.is-active .block5__body { grid-template-rows: 1fr; }
+  .block5__area.is-active .block5__text { opacity: 1; }
+
+  /* Вступ і фото в картці — лише на мобільній */
+  .block5__mlead,
+  .block5__mimg { display: none; }
+
+  /* Мобільна і планшет (Figma: mobile 402:3033, 5 section; макет 390). Без прилипання: шість карток 350
+     через 20, на 50 нижче заголовка. Відкрита (спочатку перша; інші — натисканням): сірий вступ, на 50 нижче
+     квадрат 30 з цифрою + назва 20, на 20 нижче опис (ширина 258) і фото 310 × 179. Закриті — висота 70,
+     сірі назва й пунктирний квадрат. Фото ліворуч, лінії й точки на мобільній не показуються */
+  @media (max-width: 1023px) {
+    .block5__title { margin-top: var(--gap-20); }
+    .block5__track { margin-top: calc(50 * var(--u)); height: auto; padding: 0 var(--gutter); }
+    .block5__frame { position: static; height: auto; overflow: visible; border: 0; }
+    .block5__media,
+    .block5__line,
+    .block5__head,
+    .block5__sep,
+    .block5__dot { display: none; }
+    .block5__side { position: static; display: block; }
+    .block5__list { padding: 0; gap: var(--gap-20); }
+
+    .block5__area {
+      padding: calc(20 * var(--u) - 1px); /* мінус рамка */
+      border: 1px var(--line-style) var(--color-silver-gray);
+      border-radius: var(--radius-m);
+      cursor: pointer;
+    }
+    .block5__row { height: calc(30 * var(--u)); }
+    .block5__name { white-space: nowrap; } /* назва в 1 рядок, як у Figma */
+    .block5__num { width: calc(30 * var(--u)); height: calc(30 * var(--u)); color: var(--color-text-muted); }
+    .block5__name { margin-left: var(--gap-15); color: var(--color-text-muted); transition: color 0.5s var(--ease-soft); }
+    .block5__area.is-active { cursor: default; }
+    .block5__area.is-active .block5__name { color: var(--color-text); }
+
+    .block5__text { white-space: normal; max-width: calc(258 * var(--u)); }
+    .block5__text::before { height: var(--gap-20); }
+
+    .block5__area.is-active .block5__mlead {
+      display: block;
+      width: calc(294 * var(--u));
+      margin-bottom: calc(50 * var(--u));
+      color: var(--color-text-muted);
+    }
+    .block5__area.is-active .block5__mimg {
+      display: block;
+      width: 100%;
+      height: calc(178.988 * var(--u));
+      margin-top: var(--gap-20);
+      border-radius: var(--radius-s);
+      object-fit: cover;
+    }
+  }
+</style>
+
+<script>
+  // Мобільна: напрями відкриваються натисканням (на десктопі — прокруткою, data-scroll-steps в animations.js)
+  const mobile = window.matchMedia('(max-width: 1023px)');
+  document.querySelectorAll<HTMLElement>('.block5__area').forEach((area, _, all) => {
+    area.addEventListener('click', () => {
+      if (!mobile.matches || area.classList.contains('is-active')) return;
+      all.forEach((a) => a.classList.toggle('is-active', a === area));
+    });
+  });
+</script>

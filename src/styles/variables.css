@@ -1,0 +1,147 @@
+/*
+  Змінні проєкту з макета Figma (UI-Kit + мобільна 390 / десктоп 1920).
+  Нові кольори й розміри в коді не з'являються — тільки через ці змінні.
+
+  ПРОПОРЦІЙНА ВЕРСТКА: усі розміри задаються в пікселях макета і множаться на --u.
+  --u = один піксель макета. Мобільна (до 1023 px) — ширина вікна / 390;
+  десктоп (від 1024 px) — менше з: ширина / 1920 і висота / 1080 (див. нижче).
+  Тож на будь-якому екрані пропорції, розміри кнопок і переноси тексту — як у Figma.
+  Приклад у компоненті: width: calc(445 * var(--u));
+*/
+:root {
+  --u: calc(100cqw / 390);
+
+  /* Палітра з UI-Kit */
+  --color-red: #de1313;          /* у Figma змінна називається «Green» */
+  --color-black: #0f0f0f;        /* Black */
+  --color-white: #fafafa;        /* White / Soft Gray */
+  --color-silver-gray: #aeaeae;  /* Silver Gray */
+  --color-blood-dark: #3a0306;   /* фон Блоку 4, поки вантажиться зображення */
+  --color-soft: #f1f1f1;         /* світло-сірий фон під фото (з Figma) */
+  --color-wordmark: #e9e9e9;     /* великий сірий напис у підвалі */
+  --color-badge-bg: rgb(15 15 15 / 0.7); /* плашка «SCROLL %»: білий текст читається і на світлому фоні */
+  --color-panel: #ffffff;        /* біла панель меню і форм (Figma) */
+  --color-overlay: rgb(0 0 0 / 0.2); /* затемнення сторінки під відкритою панеллю (Figma: чорний 20%) */
+  --overlay-blur: calc(4 * var(--u)); /* розмиття сайту під відкритим меню/формою (як на hawk-style.com) */
+
+  /* Кольори за роллю */
+  --color-accent: var(--color-red);
+  --color-bg: var(--color-white);
+  --color-bg-gray: var(--color-white);
+  --color-text: var(--color-black);
+  --color-text-muted: var(--color-silver-gray);
+  --color-placeholder: rgb(0 0 0 / 0.4); /* підказка в полях форми на мобільній (Figma: чорний 40%) */
+  --color-border: var(--color-silver-gray);
+
+  /* Стиль усіх ліній на сайті: solid — суцільні, dashed — пунктир (як у Figma) */
+  --line-style: dashed;
+
+  /* Шрифти */
+  --font-main: 'Inter Tight', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Стилі тексту (у px макета). Усі стилі макета — Medium, висота рядка 1 */
+  --h1: 40;       /* Heading H1 */
+  --h2: 36;       /* Heading H2 */
+  --h3: 20;       /* Small Heading */
+  --number: 36;   /* Number */
+  --body: 14;     /* Small Text */
+  --caption: 14;  /* сірий підпис у картках */
+  --badge: 12;    /* плашка «SCROLL %» */
+  --article-lh: 1.4; /* висота рядка довгого тексту (юридичні сторінки, статті) */
+  --text-18-size: calc(18 * var(--u)); /* текст 18 на мобільній (підсумок під питаннями, Блок 8) */
+  --lead-lh: 1.25;   /* вступ і цитата в статті (як на Syntrex) */
+
+  --h1-size: calc(var(--h1) * var(--u));
+  --h1-lh: 1;
+  --display-size: var(--h1-size); /* Display у макеті немає — дорівнює H1 */
+  --display-lh: 1;
+  --h2-size: calc(var(--h2) * var(--u));
+  --h2-lh: 1;
+  --h3-size: calc(var(--h3) * var(--u));
+  --h3-lh: 1;
+  --number-size: calc(var(--number) * var(--u));
+  --body-size: calc(var(--body) * var(--u));
+  --body-lh: 1;
+  --caption-size: calc(var(--caption) * var(--u));
+  --badge-size: calc(var(--badge) * var(--u));
+  --button-size: var(--body-size);
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+
+  /* Відступи з макета */
+  --gap-6: calc(6 * var(--u));
+  --gap-10: calc(10 * var(--u));
+  --gap-12: calc(12 * var(--u));
+  --gap-15: calc(15 * var(--u));
+  --gap-20: calc(20 * var(--u));
+  --gap-40: calc(40 * var(--u));
+  --control-height: calc(60 * var(--u)); /* висота кнопки */
+  --chip-height: calc(48 * var(--u));    /* вкладки тем і плашки дати в статтях (як квадрат у картці) */
+  --dot-size: calc(8 * var(--u));        /* червона крапка в плашках статті */
+  --progress-height: calc(4 * var(--u)); /* смуга прогресу читання статті */
+  --gap-60: calc(60 * var(--u));
+  --gap-100: calc(100 * var(--u));
+
+  /* Відступи шаблону (для ще не перебудованих блоків) */
+  --space-1: calc(8 * var(--u));
+  --space-2: calc(16 * var(--u));
+  --space-3: calc(24 * var(--u));
+  --space-4: calc(32 * var(--u));
+  --space-5: calc(48 * var(--u));
+  --space-6: calc(80 * var(--u));
+  --space-7: calc(120 * var(--u));
+
+  /* Між секціями: 100 (мобільна) / 250 (десктоп) */
+  --section-gap: calc(100 * var(--u));
+
+  /* Сітка: поля 20 (мобільна) / 40 (десктоп) */
+  --gutter: calc(20 * var(--u));
+  --container: calc(350 * var(--u));
+
+  /* Радіуси */
+  --radius-xs: calc(3 * var(--u));  /* рамка подяки у формі */
+  --radius-photo-s: calc(3.82 * var(--u)); /* фото дослідника на мобільній (Блок 6) */
+  --radius-s: calc(5 * var(--u));   /* кнопка, мініатюра */
+  --radius-m: calc(10 * var(--u));  /* картки */
+  --radius-l: calc(24 * var(--u));
+  --radius-pill: 999px;
+
+  /* Анімації */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration: 0.3s;
+  --ease-split: cubic-bezier(0.76, 0, 0.18, 1); /* розділення кнопки */
+  --duration-split: 0.5s;
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1); /* плавна зміна кроків */
+  --ease-menu: cubic-bezier(0.5, 0.5, 0, 1);   /* плавність меню й форм (як було спочатку) */
+  --duration-panel: 0.7s;                       /* виїзд панелі меню й форм справа наліво */
+  --duration-toggle: 0.45s;                     /* бургер меню → хрестик */
+  --duration-hover: 0.6s;                       /* наведення: збільшення фото, виліт стрілки (як на Syntrex) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1); /* м'яке завершення (збільшення точок) */
+  --ease-slide: cubic-bezier(0.65, 0, 0.35, 1); /* м'який старт і зупинка (полоска під посиланнями, як на Syntrex) */
+  --underline-duration: 0.45s;                  /* полоска під посиланнями в підвалі */
+
+  /* Шапка */
+  --header-height: 72px;
+}
+
+/* Десктоп — макет 1920×1080, як у Syntrex: --u — МЕНШИЙ масштаб із ширини й висоти, тож кадр
+   макета завжди вміщається по висоті. Блоки при цьому на всю ширину екрана з полями --gutter:
+   розкладка — сітки, flex і позиції відносно центру / половин (calc(50% + N * --u)),
+   а не «N px від лівого краю», тому на широких низьких екранах вона розтягується по ширині. */
+@media (min-width: 1024px) {
+  :root {
+    --u: min(100cqw / 1920, 100svh / 1080);
+
+    --h1: 96;
+    --h2: 72;
+    --h3: 28;
+    --number: 200;
+    --body: 18;
+    --caption: 16;
+
+    --section-gap: calc(250 * var(--u));
+    --gutter: calc(40 * var(--u));
+    --container: calc(100cqw - 2 * var(--gutter)); /* на всю ширину між полями (як у Syntrex) */
+  }
+}
